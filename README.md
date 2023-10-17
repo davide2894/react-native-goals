@@ -1,4 +1,4 @@
-# Turborepo Create React App starter
+# Turborepo react-native starter
 
 This is an official starter Turborepo.
 
@@ -7,7 +7,7 @@ This is an official starter Turborepo.
 Run the following command:
 
 ```sh
-npx create-turbo@latest -e with-create-react-app
+npx create-turbo@latest -e with-react-native-web
 ```
 
 ## What's inside?
@@ -16,10 +16,9 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [create-react-app](https://create-react-app.dev) app
-- `web`: another [create-react-app](https://create-react-app.dev) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-plugin-react` and `eslint-config-prettier`)
+- `native`: a [react-native](https://reactnative.dev/) app built with [expo](https://docs.expo.dev/)
+- `web`: a [Next.js](https://nextjs.org/) app built with [react-native-web](https://necolas.github.io/react-native-web/)
+- `ui`: a stub [react-native](https://reactnative.dev/) component library shared by both `web` and `native` applications
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
@@ -28,7 +27,6 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 This Turborepo has some additional tools already setup for you:
 
+- [Expo](https://docs.expo.dev/) for native development
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Jest](https://jestjs.io) test runner for all things JavaScript
 - [Prettier](https://prettier.io) for code formatting
