@@ -7,11 +7,12 @@ import { PrismaService } from './prisma/prisma.service';
 import { UsersModule } from './users/users.module';
 import { join } from 'path';
 import { AuthMiddleWare } from './auth/auth.middleware';
-import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ['./src/**/*.graphql'],
@@ -22,7 +23,7 @@ import { AuthService } from './auth/auth.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, AuthService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

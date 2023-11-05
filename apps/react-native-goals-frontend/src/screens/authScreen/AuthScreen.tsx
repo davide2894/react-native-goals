@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import RegistrationForm from "../../components/registrationForm/RegistrationForm";
+import LoginForm from "../../components/loginForm/LoginForm";
 
 /**
  * TODO
@@ -23,11 +24,14 @@ import RegistrationForm from "../../components/registrationForm/RegistrationForm
  * [] click on register btn -> show
  */
 
-function AuthScreen() {
+function AuthScreen({ navigation }) {
+  console.log("AuthScreen rendered");
+
   return (
     <>
       <View>
-        <RegistrationForm/>
+        {/* <RegistrationForm navigation={navigation} /> */}
+        <LoginForm navigation={navigation} />
       </View>
     </>
   );

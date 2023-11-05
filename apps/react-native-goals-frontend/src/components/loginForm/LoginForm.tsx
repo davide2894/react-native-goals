@@ -7,27 +7,29 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import GoalsScreen from "../../screens/goalsScreen/GoalsScreen";
+import { saveAccessToken } from "../../utils/accessToken";
 import { authService } from "../../services/AuthService";
 
-export default function RegistrationForm({ navigation }) {
+export default function LoginForm({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRegister = async () => {
-    console.log("Registration button pressed");
+  const handleLogin = async () => {
+    console.log("Login button pressed");
     try {
-      console.log("registering user");
+      console.log("logging user");
       console.log("Email:", email);
       console.log("Password:", password);
-      await authService.register(email, password);
+      await authService.login(email, password);
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log("RegistrationForm component rendered");
+  console.log("LoginForm component rendered");
 
   return (
     <View style={styles.container}>
@@ -46,8 +48,8 @@ export default function RegistrationForm({ navigation }) {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Pressable style={styles.height} onPress={handleRegister}>
-        <Text>Register</Text>
+      <Pressable style={styles.height} onPress={handleLogin}>
+        <Text>Login</Text>
       </Pressable>
     </View>
   );

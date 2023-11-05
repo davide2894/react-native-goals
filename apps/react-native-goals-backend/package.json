@@ -29,6 +29,7 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/graphql": "^12.0.9",
+    "@nestjs/jwt": "^10.1.1",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^5.2.0",
     "apollo": "^2.34.0",

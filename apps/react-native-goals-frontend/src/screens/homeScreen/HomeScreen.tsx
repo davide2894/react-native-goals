@@ -1,15 +1,17 @@
-  import React from "react";
 import { Button, View, Text } from "react-native";
 import { StyleSheet } from "react-native";
 
 function HomeScreen({ navigation }) {
   function handlePress() {
     // if user is logged -> go to goals page
-      // use logged stack (should contain goals screen)
-    // else 
-      // use unlogged stack (should have auth screen)
-     navigation.navigate("AuthScreen");
+    // use logged stack (should contain goals screen)
+    // else
+    // use unlogged stack (should have auth screen)
+    navigation.navigate("AuthScreen");
   }
+
+  console.log("HomeScreen rendered");
+
   return (
     <View style={styles.container}>
       <Text>WELCOME TO DAILY GOAL TRACKER</Text>

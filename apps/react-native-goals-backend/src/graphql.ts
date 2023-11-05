@@ -13,14 +13,19 @@ export class User {
     email?: Nullable<string>;
 }
 
+export class AuthPayload {
+    access_token: string;
+    email: string;
+}
+
 export abstract class IQuery {
     abstract hello(): string | Promise<string>;
 }
 
 export abstract class IMutation {
-    abstract register(email: string, password: string): Nullable<User> | Promise<Nullable<User>>;
+    abstract register(email: string, password: string): Nullable<AuthPayload> | Promise<Nullable<AuthPayload>>;
 
-    abstract login(email: string, password: string): Nullable<User> | Promise<Nullable<User>>;
+    abstract login(email: string, password: string): Nullable<AuthPayload> | Promise<Nullable<AuthPayload>>;
 }
 
 type Nullable<T> = T | null;
