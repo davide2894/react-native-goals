@@ -8,9 +8,21 @@ type AuthPayload {
   email: String!
 }
 
+type Goal {
+  id: Int
+  title: String
+  maxScore: Int
+  minScore: Int
+  actualScore: Int
+  userIdRef: Int
+  timestamp: Int
+  user: User
+}
+
 # needs a resolver function that outputs a string https://www.apollographql.com/blog/backend/architecture/schema-first-vs-code-only-graphql/
 type Query {
   hello: String!
+  userGoals: [Goal]
 }
 
 type Mutation {

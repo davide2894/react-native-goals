@@ -36,15 +36,22 @@ export class AuthService {
 
   async login(user: User) {
     console.log('inside auth.serve.ts -> login method ');
+
     return this.createAuthPayload(user);
   }
 
   createAuthPayload(user) {
+    this.jwtService.decode;
     return {
-      access_token: this.jwtService.sign({
-        email: user.email,
-        id: user.id,
-      }),
+      access_token: this.jwtService.sign(
+        {
+          email: user.email,
+          id: user.id,
+        },
+        // {
+        //   expiresIn: '1h',
+        // },
+      ),
       email: user.email,
     };
   }

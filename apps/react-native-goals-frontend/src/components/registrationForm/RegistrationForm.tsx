@@ -9,11 +9,46 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { authService } from "../../services/AuthService";
+
+const REGISTER_USER = gql`
+  mutation ($email: String!, $password: String!) {
+    register(email: $email, password: $password) {
+      email
+      access_token
+    }
+  }
+`;
 
 export default function RegistrationForm({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [registerUserMutation] = useMutation(REGISTER_USER, {
+    variables: {
+      email,
+      password,
+    },
+    onCompleted: (response) => {
+      console.log({
+        msg: "registered new user",
+        newUserEmail: email,
+      });
+      if (response) {
+        if (response.login) {
+          console.log("successfully registered");
+          console.log({ registrationInfo: response });
+        }
+      }
+    },
+    onError: (error) => {
+      console.log({
+        msg: "ooops! There was a registration error",
+        error,
+      });
+      Alert.alert(
+        "There was an error during the registration process! \n\n Please try again"
+      );
+    },
+  });
 
   const handleRegister = async () => {
     console.log("Registration button pressed");
@@ -21,7 +56,7 @@ export default function RegistrationForm({ navigation }) {
       console.log("registering user");
       console.log("Email:", email);
       console.log("Password:", password);
-      await authService.register(email, password);
+      await registerUserMutation;
     } catch (error) {
       console.error(error);
     }

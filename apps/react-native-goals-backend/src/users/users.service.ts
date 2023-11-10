@@ -27,4 +27,53 @@ export class UsersService {
     const { email, password } = createUserDto;
     return await this.prismaService.user.create({ data: { email, password } });
   }
+
+  async getUserGoals(id: number) {
+    const goals = await this.prismaService.goal.findMany({
+      where: {
+        userIdRef: id,
+      },
+    });
+    if (!goals.length) {
+      console.log(
+        `no goals found for user with id ${id}\n proceeding to create a dummy goal`,
+      );
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+      goals.push(await this.createDummyUserGoal(id));
+    }
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+    goals.push(await this.createDummyUserGoal(id));
+
+    return goals;
+  }
+
+  async createDummyUserGoal(userId: number) {
+    console.log(`createDummyUserGoal ---> passed userId is: ${userId}`);
+    const goal = await this.prismaService.goal.create({
+      data: {
+        title: 'test',
+        actualScore: 0,
+        maxScore: 5,
+        minScore: 0,
+        timestamp: new Date().getMilliseconds(),
+        userIdRef: userId,
+      },
+    });
+    console.log('users.service.ts --> createDummyGoal()');
+    console.log('dummy goal created is the following ');
+    console.log({ goal });
+    return goal;
+  }
 }

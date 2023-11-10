@@ -1,13 +1,16 @@
 import { CreateUserDto } from './create-user.dto';
-import { User } from '@prisma/client';
 import { Logger } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
-import { AuthPayload } from 'src/graphql';
+import { AuthPayload, Goal } from 'src/graphql';
+import { UsersService } from './users.service';
 
 @Resolver('User')
 export class UserResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
   @Mutation()
   async register(
@@ -36,5 +39,29 @@ export class UserResolver {
       console.log({ loggedUser });
       return loggedUser;
     }
+  }
+
+  @Query(() => [Goal])
+  async userGoals(@Context('req') req: any) {
+    console.log('inside user goals resolver');
+    console.log('user intercepted in request header');
+    // retrieve all goals associated to the authenticated user
+    // const user = await this.usersService.getUserById(req?.user?.id);
+    // console.log({ validatedUserById: user });
+    const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
+    console.log('goals that are going to be sent to the frontend');
+    console.log({ goals });
+    return goals;
+  }
+
+  @Query(() => String)
+  async hello(@Context('req') req: any) {
+    console.log(
+      'users.resolvers.ts ---> hello query resolver --> logging user data',
+    );
+    console.log({ reqUser: req.user });
+    const user = await this.usersService.getUserById(req?.user?.id);
+    console.log({ validatedUserById: user });
+    return `logged user email is ---> ${req.user.email} and logged user id is ${req.user.id}`;
   }
 }

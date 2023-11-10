@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
       },
+      context: ({ req }) => ({ req }),
     }),
   ],
   controllers: [AppController],

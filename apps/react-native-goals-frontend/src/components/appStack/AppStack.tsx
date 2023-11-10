@@ -5,6 +5,11 @@ import GoalsScreen from "../../screens/goalsScreen/GoalsScreen";
 import HomeScreen from "../../screens/homeScreen/HomeScreen";
 
 function AppStack() {
+  console.log("\n");
+  console.log("\n");
+  console.log("\n");
+  console.log("------------------------------------------------------------");
+  console.log("AppStack component rendered");
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>

@@ -3,6 +3,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AuthScreen from "../../screens/authScreen/AuthScreen";
 
 function AuthStack() {
+  console.log("\n");
+  console.log("\n");
+  console.log("\n");
+  console.log("------------------------------------------------------------");
+  console.log("AuthStack component rendered");
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>

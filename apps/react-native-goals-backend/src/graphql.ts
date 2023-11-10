@@ -18,8 +18,21 @@ export class AuthPayload {
     email: string;
 }
 
+export class Goal {
+    id?: Nullable<number>;
+    title?: Nullable<string>;
+    maxScore?: Nullable<number>;
+    minScore?: Nullable<number>;
+    actualScore?: Nullable<number>;
+    userIdRef?: Nullable<number>;
+    timestamp?: Nullable<number>;
+    user?: Nullable<User>;
+}
+
 export abstract class IQuery {
     abstract hello(): string | Promise<string>;
+
+    abstract userGoals(): Nullable<Nullable<Goal>[]> | Promise<Nullable<Nullable<Goal>[]>>;
 }
 
 export abstract class IMutation {
