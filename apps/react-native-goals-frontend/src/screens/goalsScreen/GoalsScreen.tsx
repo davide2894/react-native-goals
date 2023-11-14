@@ -1,27 +1,12 @@
 import { View, Text, Alert } from "react-native";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
 import { GoalType } from "../../types";
-
-const USER_GOALS_QUERY = gql`
-  query GoalsQuery {
-    userGoals {
-      title
-      maxScore
-      minScore
-      actualScore
-      userIdRef
-    }
-  }
-`;
-
-const HELLO_QUERY = gql`
-  query helloQuery {
-    hello
-  }
-`;
+import NewGoalButton from "../../components/newGoalButton/NewGoalButton";
+import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
+import { useGoalService } from "../../hooks/useGoalService";
 
 function GoalsScreen() {
   console.log("\n");
@@ -39,39 +24,33 @@ function GoalsScreen() {
       state: auth.accessTokenStateValue,
     },
   });
-  const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
-    fetchPolicy: "network-only",
-    onCompleted: (response) => {
-      if (response) {
-        console.log("goals fetched correctly");
-        console.log("goals response is as follows");
-        console.log({ response: response.userGoals.length });
-      }
-    },
-    onError: () => {
-      console.log("there was an error fetching your goals");
-      Alert.alert("there was an error fetching your goals");
-    },
-  });
-  if (loading) {
+
+  const goals = useGoalService().queries.getGoals();
+
+  if (goals.loading) {
     console.log("GoalsScreen --> loading goals for current logged user");
-  } else if (error) {
+  } else if (goals.error) {
     console.log("GoalsScreen --> there was an error while fetching goals");
-    console.log({ error });
+    console.log({ error: goals.error });
   } else {
     console.log(
       "GoalsScreen --> finished loading goals for current logged user"
     );
   }
 
+  // TODO:
+  // -develop goals flow (add, increment, decrement, updateAll)
+  // -only then think about syncing backend
+
   return (
     <View>
       <SignOutButton />
       <Text>Goals</Text>
-      {!loading &&
-        data?.userGoals?.map((goal: GoalType) => (
-          <Goal key={goal.id} data={goal} />
+      {!goals.loading &&
+        goals.data?.userGoals?.map((goal: GoalType) => (
+          <Goal key={goal.id} goal={goal} />
         ))}
+      <NewGoalButton />
     </View>
   );
 }

@@ -21,3 +21,13 @@ export type GoalType = {
   userIdRef: number;
   timestamp: number;
 };
+
+export type FormProps = {
+  goalToEditId?: number;
+  titleToEdit?: string;
+  maxScoreToEdit?: string;
+  mode?: string;
+  onGoalFormSubmit?: any;
+};
+
+export type goalStorageKey = string;

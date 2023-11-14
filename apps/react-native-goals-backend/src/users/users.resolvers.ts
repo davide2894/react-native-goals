@@ -64,4 +64,12 @@ export class UserResolver {
     console.log({ validatedUserById: user });
     return `logged user email is ---> ${req.user.email} and logged user id is ${req.user.id}`;
   }
+
+  // @Mutation()
+  // async incrementScore(@Context('req') req: any) {
+  //   const user = await this.usersService.getUserById(req?.user?.id);
+  //   // const updatedActualScore = await req.goal.updatedActualScore (???);
+  //   // const goalToUpdate = await this.usersService.findUserGoal(user.id, req.goal.goalId);
+  //   return `incremented goal score for user ${user}`;
+  // }
 }

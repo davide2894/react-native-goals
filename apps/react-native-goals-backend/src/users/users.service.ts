@@ -76,4 +76,13 @@ export class UsersService {
     console.log({ goal });
     return goal;
   }
+
+  async findUserGoal(userId: number, goalId: number) {
+    return await this.prismaService.goal.findUnique({
+      where: {
+        userIdRef: userId,
+        id: goalId,
+      },
+    });
+  }
 }
