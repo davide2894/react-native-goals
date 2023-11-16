@@ -6,6 +6,9 @@ import { GoalType } from "../types";
 
 export default function useResetScore(goal: GoalType) {
   const [resetScoreMutation] = useMutation(INCREMENT_SCORE_MUTATION, {
+    variables: {
+      goal,
+    },
     refetchQueries: [USER_GOALS_QUERY],
     onCompleted: () => {
       console.log("reset goal score mutation completed");

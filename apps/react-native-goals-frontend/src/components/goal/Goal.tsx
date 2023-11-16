@@ -7,11 +7,73 @@ import useIncrementScore from "../../hooks/useIncrementScore";
 import useDecrementScore from "../../hooks/useDecrementScore";
 import useDeleteGoal from "../../hooks/useDeleteGoal";
 import useResetScore from "../../hooks/useResetScore";
+import { useGoalService } from "../../hooks/useGoalService";
+import { useMutation } from "@apollo/client";
+import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
+import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
+import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
+import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
+import RESET_GOAL_MUTATION from "../../graphql/mutations/resetScoreMutation";
+import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
+import { goalsReactiveVar } from "../../cache";
 function Goal(props: { goal: GoalType }) {
   const goal = props.goal;
   const [showEditGoalForm, setShowEditGoalForm] = useState(false);
   const [editableTitleValue, setEditableTitleValue] = useState(goal.title);
   const isComplete = goal.actualScore === goal.maxScore;
+  const [incrementScoreMutation] = useMutation(INCREMENT_SCORE_MUTATION, {
+    variables: {
+      id: goal.id,
+      newCurrentScore: goal.actualScore + 1,
+    },
+    refetchQueries: [USER_GOALS_QUERY],
+    onCompleted: (res) => {
+      console.log("increment goal score mutation completed");
+      console.log("res");
+      console.log(res);
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
+  const [decrementScoreMutation] = useMutation(DECREMENT_SCORE_MUTATION, {
+    variables: {
+      id: goal.id,
+      newCurrentScore: goal.actualScore - 1,
+    },
+    onCompleted: (res) => {
+      console.log("increment goal score mutation completed");
+      console.log("res");
+      console.log(res);
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
+  const [resetScoreMutation] = useMutation(RESET_SCORE_MUTATION, {
+    refetchQueries: [USER_GOALS_QUERY],
+    variables: {
+      goalId: goal.id,
+    },
+    onCompleted: (res) => {
+      console.log({ res });
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
+  const [deleteGoalMutation] = useMutation(DELETE_GOAL_MUTATION, {
+    refetchQueries: [USER_GOALS_QUERY],
+    variables: {
+      goalId: goal.id,
+    },
+    onCompleted: (res) => {
+      console.log({ res });
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
   // const goalCsslasses = `goal mb-6 ml-6 mr-6 ${
   //   isComplete ? "text-yellow-500" : "text-white"
   // }`;
@@ -29,24 +91,27 @@ function Goal(props: { goal: GoalType }) {
     }
   }
 
-  // function handleEditGoalTitle() {
-  //   useIncrementScore(goal)
-  // }
-
-  function handleIncrementScore() {
-    useIncrementScore(goal);
+  async function handleIncrementScore() {
+    console.log(
+      "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
+    );
+    await incrementScoreMutation();
   }
 
-  function handleDecrementScore() {
-    useDecrementScore(goal);
+  async function handleDecrementScore() {
+    console.log(
+      "Goal.tsx --> handleDecrementScore --> calling decrementScoreMutation"
+    );
+
+    await decrementScoreMutation();
   }
 
-  function handleDeleteGoal() {
-    useDeleteGoal(goal);
+  async function handleDeleteGoal() {
+    await deleteGoalMutation();
   }
 
-  function handleResetGoal() {
-    useResetScore(goal);
+  async function handleResetGoal() {
+    await resetScoreMutation();
   }
 
   // useEffect(() => {
@@ -57,11 +122,12 @@ function Goal(props: { goal: GoalType }) {
   return (
     <View data-testid="goalTest">
       <TextInput
+        editable={true}
         // contentEditable="true"
         // suppressContentEditableWarning={true}
         onChangeText={handleTitleChange}
         // className={testTitleCssClasses}>
-        value={goal.title}></TextInput>
+        value={editableTitleValue}></TextInput>
       <View>
         <View>
           <Text>{goal.actualScore}</Text>
@@ -85,11 +151,6 @@ function Goal(props: { goal: GoalType }) {
             }></Button>
         </View>
         <View>
-          <Button
-            title="edit goal"
-            // className="editButton mr-4 group"
-            disabled={isComplete}
-            onPress={onEditFormOpenHandler}></Button>
           <Button
             // className="deleteButton mr-4 group"
             title="delete goal"

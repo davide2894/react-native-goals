@@ -6,6 +6,9 @@ import EDIT_GOAL_TITLE_MUTATION from "../graphql/mutations/editGoalTitleMutation
 
 export default function useEditGoalTitle(goal: GoalType) {
   const [editGoalTitleMutation] = useMutation(EDIT_GOAL_TITLE_MUTATION, {
+    variables: {
+      goal,
+    },
     refetchQueries: [USER_GOALS_QUERY],
     onCompleted: () => {
       console.log("edit goal score mutation completed");

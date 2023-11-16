@@ -1,16 +1,14 @@
 import { gql } from "@apollo/client";
-import { USER_GOALS_QUERY } from "../queries/userGoalsQuery";
 
 const INCREMENT_SCORE_MUTATION = gql`
-  mutation IncrementGoalScore($id, $newActualScore) {
-    incrementGoalScore(id: $id, newActualScore: $newActualScore) {
-        updatedGoal {
-            title
-            maxScore
-            minScore
-            actualScore
-            userIdRef
-        }
+  mutation IncrementScore($id: Int, $newCurrentScore: Int) {
+    incrementScore(inputStuff: { id: $id, newCurrentScore: $newCurrentScore }) {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
     }
   }
 `;

@@ -1,12 +1,11 @@
 import { View, Text, Alert } from "react-native";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
-import { useQuery } from "@apollo/client";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
 import { GoalType } from "../../types";
 import NewGoalButton from "../../components/newGoalButton/NewGoalButton";
-import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
 import { useGoalService } from "../../hooks/useGoalService";
+import useGetGoals from "../../hooks/useGetGoals";
 
 function GoalsScreen() {
   console.log("\n");
@@ -25,17 +24,18 @@ function GoalsScreen() {
     },
   });
 
-  const goals = useGoalService().queries.getGoals();
-
-  if (goals.loading) {
+  const { loading, error, data } = useGetGoals();
+  console.log({ data });
+  if (loading) {
     console.log("GoalsScreen --> loading goals for current logged user");
-  } else if (goals.error) {
+  } else if (error) {
     console.log("GoalsScreen --> there was an error while fetching goals");
-    console.log({ error: goals.error });
+    console.log({ error });
   } else {
     console.log(
       "GoalsScreen --> finished loading goals for current logged user"
     );
+    console.log({ goals: data?.userGoals });
   }
 
   // TODO:
@@ -46,8 +46,8 @@ function GoalsScreen() {
     <View>
       <SignOutButton />
       <Text>Goals</Text>
-      {!goals.loading &&
-        goals.data?.userGoals?.map((goal: GoalType) => (
+      {!loading &&
+        data?.userGoals?.map((goal: GoalType) => (
           <Goal key={goal.id} goal={goal} />
         ))}
       <NewGoalButton />

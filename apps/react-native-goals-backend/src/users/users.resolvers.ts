@@ -49,7 +49,7 @@ export class UserResolver {
     // const user = await this.usersService.getUserById(req?.user?.id);
     // console.log({ validatedUserById: user });
     const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
-    console.log('goals that are going to be sent to the frontend');
+    console.log('goals  that are going to be sent to the frontend');
     console.log({ goals });
     return goals;
   }
@@ -65,11 +65,54 @@ export class UserResolver {
     return `logged user email is ---> ${req.user.email} and logged user id is ${req.user.id}`;
   }
 
-  // @Mutation()
-  // async incrementScore(@Context('req') req: any) {
-  //   const user = await this.usersService.getUserById(req?.user?.id);
-  //   // const updatedActualScore = await req.goal.updatedActualScore (???);
-  //   // const goalToUpdate = await this.usersService.findUserGoal(user.id, req.goal.goalId);
-  //   return `incremented goal score for user ${user}`;
-  // }
+  @Mutation()
+  async incrementScore(@Context('req') req: any) {
+    console.log('users.resolvers.ts ---> incrementScore method');
+    console.log({ userFromReq: req?.user?.payload?.id });
+    const user = await this.usersService.getUserById(req?.user?.payload.id);
+    console.log({ requestVars: req.body.variables });
+    const updatedGoal = await this.usersService.updateGoalCurrentScore(
+      user.id,
+      req.body.variables.id,
+      req.body.variables.newCurrentScore,
+    );
+
+    console.log({ updatedGoal });
+
+    return updatedGoal;
+  }
+
+  @Mutation()
+  async decrementScore(@Context('req') req: any) {
+    console.log('users.resolvers.ts ---> incrementScore method');
+    const user = await this.usersService.getUserById(req?.user?.payload.id);
+    const updatedGoal = await this.usersService.updateGoalCurrentScore(
+      user.id,
+      req.body.variables.id,
+      req.body.variables.newCurrentScore,
+    );
+
+    return updatedGoal;
+  }
+
+  @Mutation()
+  async resetScore(@Context('req') req: any) {
+    console.log('users.resolvers.ts ---> incrementScore method');
+    const user = await this.usersService.getUserById(req?.user?.payload?.id);
+    const updatedGoal = await this.usersService.deleteGoal(
+      user.id,
+      req.body.variables.goalId,
+    );
+
+    return updatedGoal;
+  }
+
+  @Mutation()
+  async createGoal(@Context('req') req: any) {
+    console.log('users.resolvers.ts---> createGoal method');
+    const user = await this.usersService.getUserById(req?.user?.payload?.id);
+    const goalTitle = req.body.variables.goalTitle;
+    const maxScore = req.body.variables.maxScore;
+    return await this.usersService.createGoal(user.id, goalTitle, maxScore);
+  }
 }

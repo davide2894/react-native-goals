@@ -9,6 +9,7 @@ const createAuthLink = (auth: AuthContextData) =>
       "App component ---> authLink --> new ApolloLink --> this is the token from state, passed to the headers"
     );
     console.log(auth.accessTokenStateValue);
+
     operation.setContext(({ headers }) => ({
       headers: {
         ...headers,

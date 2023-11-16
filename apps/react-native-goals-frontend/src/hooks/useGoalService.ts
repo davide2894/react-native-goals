@@ -14,6 +14,7 @@ import useDecrementScore from "./useDecrementScore";
 import useResetScore from "./useResetScore";
 import useEditGoalTitle from "./useEditTitle";
 import useDeleteGoal from "./useDeleteGoal";
+import useGetGoals from "./useGetGoals";
 
 export function useGoalService() {
   useEffect(() => {
@@ -23,25 +24,7 @@ export function useGoalService() {
   }, []);
 
   const queries = {
-    getGoals: () => {
-      const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
-        fetchPolicy: "network-only",
-        onCompleted: async (response) => {
-          if (response && response.length) {
-            console.log("goals fetched correctly");
-            console.log("goals response is as follows");
-            console.log({ response: response.userGoals.length });
-            updateLocalGoalState(data.userGoals);
-            await saveGoalsToStorage(data.userGoals);
-          }
-        },
-        onError: (error) => {
-          console.log("there was an error fetching your goals", error);
-          Alert.alert("there was an error fetching your goals");
-        },
-      });
-      return { loading, error, data };
-    },
+    getGoals: () => useGetGoals(),
   };
 
   const mutations = {

@@ -21,4 +21,12 @@ async function saveGoalsToStorage(goals: Array<GoalType>) {
   }
 }
 
+async function deleteGoalsFromStorage(goals: Array<GoalType>) {
+  try {
+    return await SecureStore.deleteItemAsync(goalStorageKey);
+  } catch (error) {
+    console.error("Error loading goals from storage:", error);
+  }
+}
+
 export { loadGoalsFromStorage, saveGoalsToStorage };

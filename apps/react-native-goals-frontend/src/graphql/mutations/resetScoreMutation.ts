@@ -1,17 +1,16 @@
 import { gql } from "@apollo/client";
 
-const RESET_GOAL_MUTATION = gql`
-  mutation ResetGoal($id) {
-    resetGoal(id: $id) {
-      goal {
-        title
-        maxScore
-        minScore
-        actualScore
-        userIdRef
-      }
+const RESET_SCORE_MUTATION = gql`
+  mutation ResetScore($goalId: Int!) {
+    resetScore(goalId: $goalId) {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
     }
   }
 `;
 
-export default RESET_GOAL_MUTATION;
+export default RESET_SCORE_MUTATION;

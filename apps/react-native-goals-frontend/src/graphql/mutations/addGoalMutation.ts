@@ -1,17 +1,16 @@
 import { gql } from "@apollo/client";
 
-const ADD_GOAL_MUTATION = gql`
-  mutation AddGoalScore($id, $newActualScore) {
-    addGoalScore(id: $id, newActualScore: $newActualScore) {
-        updatedGoal {
-            title
-            maxScore
-            minScore
-            actualScore
-            userIdRef
-        }
+const CREATE_GOAL_MUTATION = gql`
+  mutation createGoal($goalTitle: String!, $maxScore: Int!) {
+    createGoal(goalTitle: $goalTitle, maxScore: $maxScore) {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
     }
   }
 `;
 
-export default ADD_GOAL_MUTATION;
+export default CREATE_GOAL_MUTATION;

@@ -4,8 +4,12 @@ import INCREMENT_SCORE_MUTATION from "../graphql/mutations/incrementScoreMutatio
 import { USER_GOALS_QUERY } from "../graphql/queries/userGoalsQuery";
 import { GoalType } from "../types";
 
-export default function useIncrementScore(goal: GoalType) {
+function useIncrementScore(goalId: number, newCurrentScore: number) {
   const [incrementScoreMutation] = useMutation(INCREMENT_SCORE_MUTATION, {
+    variables: {
+      goalId,
+      newCurrentScore,
+    },
     refetchQueries: [USER_GOALS_QUERY],
     onCompleted: () => {
       console.log("increment goal score mutation completed");
@@ -21,3 +25,5 @@ export default function useIncrementScore(goal: GoalType) {
 
   return debouncedIncrementScoreMutation;
 }
+
+export default useIncrementScore;

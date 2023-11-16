@@ -6,6 +6,9 @@ import DECREMENT_SCORE_MUTATION from "../graphql/mutations/decrementScoreMutatio
 
 export default function useDecrementScore(goal: GoalType) {
   const [decrementScoreMutation] = useMutation(DECREMENT_SCORE_MUTATION, {
+    variables: {
+      goal,
+    },
     refetchQueries: [USER_GOALS_QUERY],
     onCompleted: () => {
       console.log("decrement goal score mutation completed");

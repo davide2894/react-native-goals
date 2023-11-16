@@ -1,15 +1,14 @@
 import { gql } from "@apollo/client";
 
 const DELETE_GOAL_MUTATION = gql`
-  mutation DeleteGoal($id) {
-    deleteGoal(id: $id) {
-      goal {
-        title
-        maxScore
-        minScore
-        actualScore
-        userIdRef
-      }
+  mutation DeleteGoal($goalId: Int!) {
+    deleteGoal(goalId: $goalId) {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
     }
   }
 `;

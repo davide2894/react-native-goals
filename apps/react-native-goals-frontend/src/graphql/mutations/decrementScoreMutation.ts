@@ -1,15 +1,14 @@
 import { gql } from "@apollo/client";
 
 const DECREMENT_SCORE_MUTATION = gql`
-  mutation DecrementGoalScore($id, $newScore) {
-    decrementGoalScore(id: $id, newActualScore: $newActualScore) {
-      updatedGoal {
-        title
-        maxScore
-        minScore
-        actualScore
-        userIdRef
-      }
+  mutation DecrementScore($id: Int, $newCurrentScore: Int) {
+    decrementScore(inputStuff: { id: $id, newCurrentScore: $newCurrentScore }) {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
     }
   }
 `;

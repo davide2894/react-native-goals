@@ -14,7 +14,7 @@ export class AuthMiddleWare implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     console.log('In auth.middleware.ts middleware');
     console.log('incoming request headers');
-    console.log(req.headers);
+    console.log({ requestHeaders: req.headers });
 
     const accessToken = req.headers?.authorization?.split(' ')[1];
     console.log({ accessToken });
@@ -34,10 +34,22 @@ export class AuthMiddleWare implements NestMiddleware {
         req['user'] = decodedAccessToken;
         console.log("req['user'] following");
         console.log(req['user']);
+        console.log({ requestBody: req.body });
+        console.log('middleware is ok');
       } catch (error) {
         res.status(401).json({ message: 'Unauthorized' });
       }
     }
+    // req['user'] = {
+    //   header: { alg: 'HS256', typ: 'JWT' },
+    //   payload: {
+    //     email: 'test.itau@mail.com',
+    //     id: 7,
+    //     iat: 1699567229,
+    //     exp: 1699570829,
+    //   },
+    //   signature: '9cXrK4hmVUpphI-zCk1vEXpYf0Qav_76RUPhFwO9Mdo',
+    // };
     next();
   }
 }

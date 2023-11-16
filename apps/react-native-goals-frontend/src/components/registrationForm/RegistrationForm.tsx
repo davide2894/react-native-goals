@@ -56,7 +56,7 @@ export default function RegistrationForm({ navigation }) {
       console.log("registering user");
       console.log("Email:", email);
       console.log("Password:", password);
-      await registerUserMutation;
+      await registerUserMutation();
     } catch (error) {
       console.error(error);
     }

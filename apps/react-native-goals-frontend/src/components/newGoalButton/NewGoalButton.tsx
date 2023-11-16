@@ -21,7 +21,6 @@ function NewGoalButton(
       {showNewGoalForm && (
         <Modal
           animationType="slide"
-          transparent={true}
           visible={showNewGoalForm}
           onRequestClose={() => {
             Alert.alert("Modal has been closed.");

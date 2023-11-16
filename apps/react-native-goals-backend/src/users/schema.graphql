@@ -19,6 +19,11 @@ type Goal {
   user: User
 }
 
+input GoalScoreInput {
+  id: Int
+  newCurrentScore: Int
+}
+
 # needs a resolver function that outputs a string https://www.apollographql.com/blog/backend/architecture/schema-first-vs-code-only-graphql/
 type Query {
   hello: String!
@@ -28,4 +33,10 @@ type Query {
 type Mutation {
   register(email: String!, password: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
+  incrementScore(inputStuff: GoalScoreInput): Goal
+  decrementScore(inputStuff: GoalScoreInput): Goal
+  resetScore(goalId: Int!): Goal
+  deleteGoal(goalId: Int!): Goal
+  createGoal(goalTitle: String!, maxScore: Int!): Goal
+  # editGoalTitle(goal: Goal): Goal
 }
