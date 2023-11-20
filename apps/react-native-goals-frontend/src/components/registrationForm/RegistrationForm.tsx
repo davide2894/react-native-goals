@@ -2,13 +2,14 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Pressable,
   Alert,
 } from "react-native";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import { saveAccessTokenToStorage } from "../../utils/accessToken";
+import { useAuthContext } from "../authProvider/AuthProvider";
 
 const REGISTER_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -19,23 +20,27 @@ const REGISTER_USER = gql`
   }
 `;
 
-export default function RegistrationForm({ navigation }) {
+export default function RegistrationForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const auth = useAuthContext();
   const [registerUserMutation] = useMutation(REGISTER_USER, {
     variables: {
       email,
       password,
     },
-    onCompleted: (response) => {
+    onCompleted: async (response) => {
       console.log({
         msg: "registered new user",
         newUserEmail: email,
+        response,
       });
       if (response) {
-        if (response.login) {
+        if (response.register) {
           console.log("successfully registered");
           console.log({ registrationInfo: response });
+          await saveAccessTokenToStorage(response.register?.access_token);
+          auth.updateAccessTokenInContext(response.register?.access_token);
         }
       }
     },
