@@ -1,11 +1,11 @@
 import { useState, SyntheticEvent } from "react";
-import { FormProps, GoalType } from "../../types";
+import { FormProps, GoalType, GoalsQueryResult } from "../../types";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { TextInput, View, Text, StyleSheet, Pressable } from "react-native";
 import { useMutation } from "@apollo/client";
 import ADD_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
-import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
 import CREATE_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
+import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
 
 function GoalForm(props: FormProps) {
   const [goalTitle, setGoalTitle] = useState(
@@ -15,10 +15,27 @@ function GoalForm(props: FormProps) {
     props.maxScoreToEdit ? props.maxScoreToEdit : ""
   );
   const [useCreateGoalMutation] = useMutation(CREATE_GOAL_MUTATION, {
-    refetchQueries: [USER_GOALS_QUERY],
     variables: {
       goalTitle: goalTitle,
       maxScore: parseInt(goalMaxScore),
+    },
+    update(cache, { data }) {
+      const newGoal: GoalType = data.createGoal;
+      const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
+        query: USER_GOALS_QUERY,
+      }).userGoals;
+      console.log({ allGoalsInCache });
+      console.log("printing newGoal as it goes in the new array...");
+      console.log(newGoal);
+
+      if (allGoalsInCache) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: [...allGoalsInCache, newGoal],
+          },
+        });
+      }
     },
     onCompleted: (res) => {
       console.log({ res });

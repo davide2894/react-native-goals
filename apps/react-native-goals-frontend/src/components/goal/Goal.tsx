@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { GoalType } from "../../types";
+import { GoalType, GoalsQueryResult } from "../../types";
 import {
   Pressable,
   Modal,
@@ -12,36 +12,52 @@ import GoalForm from "../goalForm/GoalForm";
 import trimString from "../../utils/trimString";
 import { useMutation } from "@apollo/client";
 import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
-import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
 import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
 import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
 import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
 import ButtonIcon from "../buttonIcon/ButtonIcon";
+import { useDebouncedCallback } from "use-debounce";
+import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
+import { getAllGoalsInCache } from "../../cache";
+import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
 
 /**
- *
  * TODO
- * [] after score increase -> refetch the current goal (not every single goal like it's happening now)
- * [] after score decrease -> refetch the current goal (not every single goal like it's happening now)
- * [] after score reset -> refetch the current goal (not every single goal like it's happening now)
- * [] after goal deletion
- *  [] -> remove goal from cache
- *  [] -> remove goal from frontend storage
- */
+ * [] refactor mutation files so that one file contains both the graphql statement and the apollo client hook
+ * [] replace expo secure store to mmkv for storage: expo has too small of a limit for max storage string length
+ * [] fix warning:  WARN  Require cycle: src\hooks\useGetGoals.ts -> src\utils\goalState.ts -> src\cache.ts -> src\hooks\useGetGoals.ts
+ * [] style UI
+ * */
 
 function Goal(props: { goal: GoalType }) {
   console.log("Goal.tsx -> rendering goal component");
-  console.log({ goal: props.goal });
   const goal = props.goal;
   const [showEditGoalForm, setShowEditGoalForm] = useState(false);
   const [editableTitleValue, setEditableTitleValue] = useState(goal.title);
   const isComplete = goal.actualScore === goal.maxScore;
+  const [actualScoreState, setActualScorestate] = useState(goal.actualScore);
+
   const [incrementScoreMutation] = useMutation(INCREMENT_SCORE_MUTATION, {
     variables: {
       id: goal.id,
-      newCurrentScore: goal.actualScore + 1,
+      newCurrentScore: actualScoreState,
     },
-    refetchQueries: [USER_GOALS_QUERY],
+    update: (cache, { data }) => {
+      const updatedGoal = data.incrementScore;
+      const allGoalsInCache = getAllGoalsInCache();
+      if (allGoalsInCache) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: allGoalsInCache.userGoals.map((currentGoal) => {
+              return currentGoal.id === updatedGoal.id
+                ? updatedGoal
+                : currentGoal;
+            }),
+          },
+        });
+      }
+    },
     onCompleted: (res) => {
       console.log("increment goal score mutation completed");
       console.log("res");
@@ -51,13 +67,32 @@ function Goal(props: { goal: GoalType }) {
       console.log({ error });
     },
   });
+
   const [decrementScoreMutation] = useMutation(DECREMENT_SCORE_MUTATION, {
     variables: {
       id: goal.id,
-      newCurrentScore: goal.actualScore - 1,
+      newCurrentScore: actualScoreState,
+    },
+    update: (cache, { data }) => {
+      const updatedGoal = data.incrementScore;
+      const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
+        query: USER_GOALS_QUERY,
+      });
+      if (allGoalsInCache) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: allGoalsInCache.userGoals.map((currentGoal) => {
+              return currentGoal.id === updatedGoal.id
+                ? updatedGoal
+                : currentGoal;
+            }),
+          },
+        });
+      }
     },
     onCompleted: (res) => {
-      console.log("increment goal score mutation completed");
+      console.log("DECREMENT goal score mutation completed");
       console.log("res");
       console.log(res);
     },
@@ -66,9 +101,26 @@ function Goal(props: { goal: GoalType }) {
     },
   });
   const [resetScoreMutation] = useMutation(RESET_SCORE_MUTATION, {
-    refetchQueries: [USER_GOALS_QUERY],
     variables: {
       goalId: goal.id,
+    },
+    update: (cache, { data }) => {
+      const updatedGoal = data.incrementScore;
+      const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
+        query: USER_GOALS_QUERY,
+      });
+      if (allGoalsInCache) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: allGoalsInCache.userGoals.map((currentGoal) => {
+              return currentGoal.id === updatedGoal.id
+                ? updatedGoal
+                : currentGoal;
+            }),
+          },
+        });
+      }
     },
     onCompleted: (res) => {
       console.log({ res });
@@ -77,10 +129,27 @@ function Goal(props: { goal: GoalType }) {
       console.log({ error });
     },
   });
+
   const [deleteGoalMutation] = useMutation(DELETE_GOAL_MUTATION, {
-    refetchQueries: [USER_GOALS_QUERY],
     variables: {
       goalId: goal.id,
+    },
+    update: (cache, { data }) => {
+      const deletedGoal: GoalType = data.deleteGoal;
+      const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
+        query: USER_GOALS_QUERY,
+      });
+
+      if (allGoalsInCache.userGoals) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: allGoalsInCache.userGoals.filter(
+              (goal) => goal.id !== deletedGoal.id
+            ),
+          },
+        });
+      }
     },
     onCompleted: (res) => {
       console.log({ res });
@@ -89,6 +158,78 @@ function Goal(props: { goal: GoalType }) {
       console.log({ error });
     },
   });
+
+  async function handleIncrementScore() {
+    console.log(
+      "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
+    );
+    await incrementScoreMutation();
+  }
+
+  const [editTitleMutation] = useMutation(EDIT_GOAL_TITLE_MUTATION, {
+    variables: {
+      goalId: goal.id,
+      goalTitle: editableTitleValue,
+    },
+    update: (cache, { data }) => {
+      const updatedGoal = data.editGoalTitle;
+      const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
+        query: USER_GOALS_QUERY,
+      });
+      if (allGoalsInCache) {
+        cache.writeQuery({
+          query: USER_GOALS_QUERY,
+          data: {
+            userGoals: allGoalsInCache.userGoals.map((currentGoal) => {
+              return currentGoal.id === updatedGoal.id
+                ? updatedGoal
+                : currentGoal;
+            }),
+          },
+        });
+      }
+    },
+    onCompleted: (res) => {
+      console.log({ res });
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
+
+  const debouncedhandleIncrementScore = useDebouncedCallback(
+    handleIncrementScore,
+    500,
+    { trailing: true }
+  );
+
+  const debouncedhandleDecrementScore = useDebouncedCallback(
+    handleDecrementScore,
+    500,
+    { trailing: true }
+  );
+
+  const debouncedEditTitleMutation = useDebouncedCallback(
+    editTitleMutation,
+    500,
+    { trailing: true }
+  );
+
+  async function handleDecrementScore() {
+    console.log(
+      "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
+    );
+    await decrementScoreMutation();
+  }
+
+  async function handleDeleteGoal() {
+    await deleteGoalMutation();
+  }
+
+  async function handleResetGoal() {
+    setActualScorestate(0);
+    await resetScoreMutation();
+  }
 
   const testTitleCssClasses = `text-lg goal-text ${
     isComplete ? "after:content-['✓'] after:ml-2" : ""
@@ -98,40 +239,13 @@ function Goal(props: { goal: GoalType }) {
     setShowEditGoalForm(true);
   }
 
-  function handleTitleChange(text) {
+  async function handleTitleChange(text) {
     const trimmedEventValue = trimString(text);
     if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
       setEditableTitleValue(trimmedEventValue);
     }
+    await debouncedEditTitleMutation();
   }
-
-  async function handleIncrementScore() {
-    console.log(
-      "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
-    );
-    await incrementScoreMutation();
-  }
-
-  async function handleDecrementScore() {
-    console.log(
-      "Goal.tsx --> handleDecrementScore --> calling decrementScoreMutation"
-    );
-
-    await decrementScoreMutation();
-  }
-
-  async function handleDeleteGoal() {
-    await deleteGoalMutation();
-  }
-
-  async function handleResetGoal() {
-    await resetScoreMutation();
-  }
-
-  // useEffect(() => {
-  //   dispatch(updateGoalTitle({ id: goal.id, editableTitleValue }));
-  //   return () => {};
-  // }, [editableTitleValue, dispatch, goal.id]);
 
   return (
     <View data-testid="goalTest" style={styles.container}>
@@ -145,27 +259,33 @@ function Goal(props: { goal: GoalType }) {
         value={editableTitleValue}></TextInput>
       <View>
         <View>
-          <Text>{goal.actualScore}</Text>
+          <Text>{actualScoreState}</Text>
           <Text>/</Text>
           <Text>{goal.maxScore}</Text>
         </View>
         <View>
           <Pressable
             style={styles.score}
-            onPress={handleDecrementScore}
+            onPress={() => {
+              setActualScorestate((prev) => prev - 1);
+              debouncedhandleDecrementScore();
+            }}
             disabled={goal.actualScore === goal.minScore || isComplete}>
             <ButtonIcon iconName="score-decrease-button" />
             <Text>Decrease by 1</Text>
           </Pressable>
           <Pressable
             style={styles.score}
-            onPress={handleIncrementScore}
-            disabled={goal.actualScore === goal.maxScore || isComplete}>
+            onPress={() => {
+              setActualScorestate((prev) => prev + 1);
+              debouncedhandleIncrementScore();
+            }}
+            disabled={actualScoreState === goal.maxScore || isComplete}>
             <Text>increase score by 1</Text>
           </Pressable>
         </View>
         <View>
-          <Pressable onPress={handleDeleteGoal}>
+          <Pressable style={styles.deleteButton} onPress={handleDeleteGoal}>
             <Text>delete goal</Text>
           </Pressable>
           <Pressable
@@ -219,7 +339,7 @@ const styles = StyleSheet.create({
     color: "green",
   },
   score: {
-    // fontSize: 20,
+    paddingBottom: 30,
   },
   scoreButtonsContainer: {
     flexDirection: "row",
@@ -236,5 +356,8 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     marginRight: 4,
+  },
+  deleteButton: {
+    paddingBottom: 50,
   },
 });
