@@ -10,9 +10,8 @@ function SignOutButton() {
   const apolloClient = useApolloClient();
 
   async function handleSignOut() {
-    await apolloClient.clearStore();
-    await deleteGoalsFromStorage();
     await deleteAccessTokenFromStorage();
+    apolloClient.clearStore();
     auth.updateAccessTokenInContext("");
   }
 
