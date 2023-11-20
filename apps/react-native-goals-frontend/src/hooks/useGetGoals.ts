@@ -1,12 +1,25 @@
 import { useQuery } from "@apollo/client";
 import { Alert } from "react-native";
-import { USER_GOALS_QUERY } from "../graphql/queries/userGoalsQuery";
+import { gql } from "@apollo/client";
 import { updateLocalGoalState } from "../utils/goalState";
 import { saveGoalsToStorage } from "../utils/goalsStorage";
 
+export const USER_GOALS_QUERY = gql`
+  query GoalsQuery {
+    userGoals {
+      id
+      title
+      maxScore
+      minScore
+      actualScore
+      userIdRef
+    }
+  }
+`;
+
 function useGetGoals() {
   const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
-    fetchPolicy: "network-only",
+    // fetchPolicy: "network-only",
     onCompleted: async (response) => {
       if (response && response.length) {
         console.log("goals fetched correctly");

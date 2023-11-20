@@ -25,7 +25,7 @@ export class AuthMiddleWare implements NestMiddleware {
         console.log('inside try{} catch() {}');
 
         // TODO:
-        // bug: when token is expired, it doesn't throw an ecv
+        // bug: when token is expired, it doesn't throw an error
         const decodedAccessToken = this.jwtService.verify(accessToken, {
           ignoreExpiration: true,
           complete: true,

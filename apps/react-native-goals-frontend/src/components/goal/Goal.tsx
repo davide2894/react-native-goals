@@ -1,22 +1,37 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { GoalType } from "../../types";
-import { Button, Modal, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  Modal,
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+} from "react-native";
 import GoalForm from "../goalForm/GoalForm";
 import trimString from "../../utils/trimString";
-import useIncrementScore from "../../hooks/useIncrementScore";
-import useDecrementScore from "../../hooks/useDecrementScore";
-import useDeleteGoal from "../../hooks/useDeleteGoal";
-import useResetScore from "../../hooks/useResetScore";
-import { useGoalService } from "../../hooks/useGoalService";
 import { useMutation } from "@apollo/client";
 import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
 import { USER_GOALS_QUERY } from "../../graphql/queries/userGoalsQuery";
 import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
 import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
-import RESET_GOAL_MUTATION from "../../graphql/mutations/resetScoreMutation";
 import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
-import { goalsReactiveVar } from "../../cache";
+import ButtonIcon from "../buttonIcon/ButtonIcon";
+
+/**
+ *
+ * TODO
+ * [] after score increase -> refetch the current goal (not every single goal like it's happening now)
+ * [] after score decrease -> refetch the current goal (not every single goal like it's happening now)
+ * [] after score reset -> refetch the current goal (not every single goal like it's happening now)
+ * [] after goal deletion
+ *  [] -> remove goal from cache
+ *  [] -> remove goal from frontend storage
+ */
+
 function Goal(props: { goal: GoalType }) {
+  console.log("Goal.tsx -> rendering goal component");
+  console.log({ goal: props.goal });
   const goal = props.goal;
   const [showEditGoalForm, setShowEditGoalForm] = useState(false);
   const [editableTitleValue, setEditableTitleValue] = useState(goal.title);
@@ -74,12 +89,11 @@ function Goal(props: { goal: GoalType }) {
       console.log({ error });
     },
   });
-  // const goalCsslasses = `goal mb-6 ml-6 mr-6 ${
-  //   isComplete ? "text-yellow-500" : "text-white"
-  // }`;
+
   const testTitleCssClasses = `text-lg goal-text ${
     isComplete ? "after:content-['✓'] after:ml-2" : ""
   }`;
+
   function onEditFormOpenHandler() {
     setShowEditGoalForm(true);
   }
@@ -120,13 +134,14 @@ function Goal(props: { goal: GoalType }) {
   // }, [editableTitleValue, dispatch, goal.id]);
 
   return (
-    <View data-testid="goalTest">
+    <View data-testid="goalTest" style={styles.container}>
       <TextInput
+        style={{
+          ...styles.title,
+          ...(isComplete ? styles.titleCompletedColor : styles.titleBlack),
+        }}
         editable={true}
-        // contentEditable="true"
-        // suppressContentEditableWarning={true}
         onChangeText={handleTitleChange}
-        // className={testTitleCssClasses}>
         value={editableTitleValue}></TextInput>
       <View>
         <View>
@@ -135,31 +150,30 @@ function Goal(props: { goal: GoalType }) {
           <Text>{goal.maxScore}</Text>
         </View>
         <View>
-          <Button
-            title="decrease score by 1"
-            // className="mr-2 ml-2 group"
+          <Pressable
+            style={styles.score}
             onPress={handleDecrementScore}
-            disabled={
-              goal.actualScore === goal.minScore || isComplete
-            }></Button>
-          <Button
-            title="increase score by 1"
-            // className="group"
+            disabled={goal.actualScore === goal.minScore || isComplete}>
+            <ButtonIcon iconName="score-decrease-button" />
+            <Text>Decrease by 1</Text>
+          </Pressable>
+          <Pressable
+            style={styles.score}
             onPress={handleIncrementScore}
-            disabled={
-              goal.actualScore === goal.maxScore || isComplete
-            }></Button>
+            disabled={goal.actualScore === goal.maxScore || isComplete}>
+            <Text>increase score by 1</Text>
+          </Pressable>
         </View>
         <View>
-          <Button
-            // className="deleteButton mr-4 group"
-            title="delete goal"
-            onPress={handleDeleteGoal}></Button>
-          <Button
-            title="reset goal"
-            // className="resetButton group"
+          <Pressable onPress={handleDeleteGoal}>
+            <Text>delete goal</Text>
+          </Pressable>
+          <Pressable
+            style={styles.score}
             disabled={goal.actualScore === 0}
-            onPress={handleResetGoal}></Button>
+            onPress={handleResetGoal}>
+            <Text>reset goal</Text>
+          </Pressable>
           {showEditGoalForm && (
             <Modal onRequestClose={() => setShowEditGoalForm(false)}>
               <GoalForm
@@ -178,3 +192,49 @@ function Goal(props: { goal: GoalType }) {
 }
 
 export default Goal;
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 6,
+    marginLeft: 6,
+    marginRight: 6,
+    borderColor: "black",
+    borderWidth: 5,
+    borderRadius: 10,
+    padding: 10,
+  },
+  button: {
+    color: "black",
+  },
+  completedButtonColor: {
+    color: "green",
+  },
+  title: {
+    fontSize: 18,
+  },
+  titleBlack: {
+    color: "black",
+  },
+  titleCompletedColor: {
+    color: "green",
+  },
+  score: {
+    // fontSize: 20,
+  },
+  scoreButtonsContainer: {
+    flexDirection: "row",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  scoreButton: {
+    marginRight: 2,
+    marginLeft: 2,
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    marginTop: 2,
+  },
+  resetButton: {
+    marginRight: 4,
+  },
+});

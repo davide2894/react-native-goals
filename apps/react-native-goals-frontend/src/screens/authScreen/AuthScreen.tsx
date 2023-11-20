@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import RegistrationForm from "../../components/registrationForm/RegistrationForm";
 import LoginForm from "../../components/loginForm/LoginForm";
 
@@ -24,17 +24,27 @@ import LoginForm from "../../components/loginForm/LoginForm";
  * [] click on register btn -> show
  */
 
-function AuthScreen({ navigation }) {
+function AuthScreen() {
   console.log("AuthScreen rendered");
 
   return (
     <>
-      <View>
-        {/* <RegistrationForm navigation={navigation} /> */}
-        <LoginForm navigation={navigation} />
+      <View style={styles.container}>
+        <RegistrationForm />
+        <LoginForm />
       </View>
     </>
   );
 }
 
 export default AuthScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    borderWidth: 10,
+    height: "100%",
+  },
+});

@@ -38,5 +38,5 @@ type Mutation {
   resetScore(goalId: Int!): Goal
   deleteGoal(goalId: Int!): Goal
   createGoal(goalTitle: String!, maxScore: Int!): Goal
-  # editGoalTitle(goal: Goal): Goal
+  editGoalTitle(goalId: Int, goalTitle: String): Goal
 }

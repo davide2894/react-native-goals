@@ -10,4 +10,5 @@ export async function getAccessTokenFromStorage() {
 
 export async function deleteAccessTokenFromStorage() {
   await SecureStore.deleteItemAsync("access_token");
+  console.log("storage -----> access token deleted from storage");
 }

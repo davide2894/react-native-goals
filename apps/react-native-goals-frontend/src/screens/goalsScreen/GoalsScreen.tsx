@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
@@ -6,6 +6,8 @@ import { GoalType } from "../../types";
 import NewGoalButton from "../../components/newGoalButton/NewGoalButton";
 import { useGoalService } from "../../hooks/useGoalService";
 import useGetGoals from "../../hooks/useGetGoals";
+import { Fragment } from "react";
+import { useApolloClient } from "@apollo/client";
 
 function GoalsScreen() {
   console.log("\n");
@@ -25,7 +27,10 @@ function GoalsScreen() {
   });
 
   const { loading, error, data } = useGetGoals();
+  const client = useApolloClient();
+
   console.log({ data });
+
   if (loading) {
     console.log("GoalsScreen --> loading goals for current logged user");
   } else if (error) {
@@ -38,21 +43,34 @@ function GoalsScreen() {
     console.log({ goals: data?.userGoals });
   }
 
-  // TODO:
-  // -develop goals flow (add, increment, decrement, updateAll)
-  // -only then think about syncing backend
+  function handleRenderItem({ item, ..._ }) {
+    // console.log({ currentRenderItem: item });
+    return <Goal key={item.id} goal={item} />;
+  }
 
   return (
     <View>
       <SignOutButton />
-      <Text>Goals</Text>
-      {!loading &&
-        data?.userGoals?.map((goal: GoalType) => (
-          <Goal key={goal.id} goal={goal} />
-        ))}
-      <NewGoalButton />
+      <Text style={styles.header}>Goals</Text>
+      {!loading && !error && (
+        <FlatList
+          data={data.userGoals}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={handleRenderItem}></FlatList>
+      )}
+      {!loading && !error && <NewGoalButton />}
     </View>
   );
 }
 
 export default GoalsScreen;
+
+const styles = StyleSheet.create({
+  header: {
+    borderBottomColor: "black",
+    borderBottomWidth: 2,
+    marginBottom: 30,
+    fontSize: 40,
+    textDecorationLine: "underline",
+  },
+});

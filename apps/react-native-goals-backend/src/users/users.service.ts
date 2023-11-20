@@ -41,10 +41,13 @@ export class UsersService {
     });
 
     if (!goals.length) {
+      for (let i = 0; i < 5; i++) {
+        goals.push(await this.createDummyUserGoal(id));
+      }
+
       console.log(
         `no goals found for user with id ${id}\n proceeding to create a dummy goal`,
       );
-      goals.push(await this.createDummyUserGoal(id));
     }
     return goals;
   }
@@ -156,5 +159,17 @@ export class UsersService {
     console.log('created goal successfully');
     console.log({ createdGoal: goal });
     return goal;
+  }
+
+  async editGoalTitle(goalId: number, userId: number, goalTitle: string) {
+    return await this.prismaService.goal.update({
+      where: {
+        id: goalId,
+        userIdRef: userId,
+      },
+      data: {
+        title: goalTitle,
+      },
+    });
   }
 }

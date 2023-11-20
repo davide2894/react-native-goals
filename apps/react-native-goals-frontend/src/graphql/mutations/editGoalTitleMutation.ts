@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const EDIT_GOAL_TITLE_MUTATION = gql`
-  mutation EditGoalTitle($newTitle: String) {
-    editGoalTitle(newTitle: $newTitle) {
+  mutation EditGoalTitle($goalId: Int, $goalTitle: String) {
+    editGoalTitle(goalId: $goalId, goalTitle: $goalTitle) {
       id
       title
       maxScore

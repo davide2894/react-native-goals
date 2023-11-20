@@ -12,6 +12,31 @@ export class UserResolver {
     private usersService: UsersService,
   ) {}
 
+  @Query(() => [Goal])
+  async userGoals(@Context('req') req: any) {
+    console.log('inside user goals resolver');
+    console.log('user intercepted in request header');
+    // retrieve all goals associated to the authenticated user
+    // const user = await this.usersService.getUserById(req?.user?.id);
+    // console.log({ validatedUserById: user });
+    const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
+    console.log('goals  that are going to be sent to the frontend');
+    console.log({ goals });
+    return goals;
+  }
+
+  @Query(() => String)
+  async hello(@Context('req') req: any) {
+    console.log({ req });
+    // console.log(
+    //   'users.resolvers.ts ---> hello query resolver --> logging user data',
+    // );
+    // console.log({ reqUser: req.user });
+    // const user = await this.usersService.getUserById(req?.user?.id);
+    // console.log({ validatedUserById: user });
+    return `hello`;
+  }
+
   @Mutation()
   async register(
     @Args('email') email: string,
@@ -41,30 +66,6 @@ export class UserResolver {
     }
   }
 
-  @Query(() => [Goal])
-  async userGoals(@Context('req') req: any) {
-    console.log('inside user goals resolver');
-    console.log('user intercepted in request header');
-    // retrieve all goals associated to the authenticated user
-    // const user = await this.usersService.getUserById(req?.user?.id);
-    // console.log({ validatedUserById: user });
-    const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
-    console.log('goals  that are going to be sent to the frontend');
-    console.log({ goals });
-    return goals;
-  }
-
-  @Query(() => String)
-  async hello(@Context('req') req: any) {
-    console.log(
-      'users.resolvers.ts ---> hello query resolver --> logging user data',
-    );
-    console.log({ reqUser: req.user });
-    const user = await this.usersService.getUserById(req?.user?.id);
-    console.log({ validatedUserById: user });
-    return `logged user email is ---> ${req.user.email} and logged user id is ${req.user.id}`;
-  }
-
   @Mutation()
   async incrementScore(@Context('req') req: any) {
     console.log('users.resolvers.ts ---> incrementScore method');
@@ -84,7 +85,7 @@ export class UserResolver {
 
   @Mutation()
   async decrementScore(@Context('req') req: any) {
-    console.log('users.resolvers.ts ---> incrementScore method');
+    console.log('users.resolvers.ts ---> decrementScore method');
     const user = await this.usersService.getUserById(req?.user?.payload.id);
     const updatedGoal = await this.usersService.updateGoalCurrentScore(
       user.id,
@@ -97,7 +98,19 @@ export class UserResolver {
 
   @Mutation()
   async resetScore(@Context('req') req: any) {
-    console.log('users.resolvers.ts ---> incrementScore method');
+    console.log('users.resolvers.ts ---> resetScore method');
+    const user = await this.usersService.getUserById(req?.user?.payload?.id);
+    const updatedGoal = await this.usersService.resetScore(
+      user.id,
+      req.body.variables.goalId,
+    );
+
+    return updatedGoal;
+  }
+
+  @Mutation()
+  async deleteGoal(@Context('req') req: any) {
+    console.log('users.resolvers.ts ---> deleteGoal method');
     const user = await this.usersService.getUserById(req?.user?.payload?.id);
     const updatedGoal = await this.usersService.deleteGoal(
       user.id,
@@ -109,10 +122,19 @@ export class UserResolver {
 
   @Mutation()
   async createGoal(@Context('req') req: any) {
-    console.log('users.resolvers.ts---> createGoal method');
+    console.log('users.resolvers.ts--->  createGoal method');
     const user = await this.usersService.getUserById(req?.user?.payload?.id);
     const goalTitle = req.body.variables.goalTitle;
     const maxScore = req.body.variables.maxScore;
     return await this.usersService.createGoal(user.id, goalTitle, maxScore);
+  }
+
+  @Mutation()
+  async editGoalTitle(@Context('req') req: any) {
+    console.log('users.resolvers.ts--->  editGoalTitle method');
+    const user = await this.usersService.getUserById(req?.user?.payload?.id);
+    const goalId = req.body.variables.goalId;
+    const goalTitle = req.body.variables.goalTitle;
+    return await this.usersService.editGoalTitle(goalId, user.id, goalTitle);
   }
 }

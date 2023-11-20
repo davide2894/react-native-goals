@@ -1,12 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  deleteAccessTokenFromStorage,
-  getAccessTokenFromStorage,
-  saveAccessTokenToStorage,
-} from "../../utils/accessToken";
-import { gql, useMutation } from "@apollo/client";
-import { Alert } from "react-native";
-import { AuthContextData } from "../../types";
+import { useContext, useEffect, useState } from "react";
+import { getAccessTokenFromStorage } from "../../utils/accessToken";
 import AuthContext from "../../contexts/authContext";
 
 function AuthProvider({ children }) {
@@ -57,13 +50,7 @@ function AuthProvider({ children }) {
   }
 
   async function logOut() {
-    console.log("signiinout after pressing singout button");
-    await deleteAccessTokenFromStorage();
-    const t = await getAccessTokenFromStorage();
-    console.log({
-      msg: "token after pressing signout button",
-      token: t,
-    });
+    console.log("AuthProvider.tsx ---> logout after pressing singout button");
     setAccessTokenStateValue("");
   }
 

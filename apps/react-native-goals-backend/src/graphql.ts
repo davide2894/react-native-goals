@@ -54,6 +54,8 @@ export abstract class IMutation {
     abstract deleteGoal(goalId: number): Nullable<Goal> | Promise<Nullable<Goal>>;
 
     abstract createGoal(goalTitle: string, maxScore: number): Nullable<Goal> | Promise<Nullable<Goal>>;
+
+    abstract editGoalTitle(goalId?: Nullable<number>, goalTitle?: Nullable<string>): Nullable<Goal> | Promise<Nullable<Goal>>;
 }
 
 type Nullable<T> = T | null;

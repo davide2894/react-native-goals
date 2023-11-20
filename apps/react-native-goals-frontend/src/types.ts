@@ -9,7 +9,7 @@ export type AuthContextData = {
   login: (email, password) => Promise<any>;
   register: (email, password) => Promise<any>;
   updateAccessTokenInContext: (access_token) => void;
-  logOut: () => void;
+  logOut: () => Promise<void>;
 };
 
 export type GoalType = {
@@ -31,3 +31,7 @@ export type FormProps = {
 };
 
 export type goalStorageKey = string;
+
+export type GoalsQueryResult = {
+  userGoals: Array<GoalType>;
+};
