@@ -21,7 +21,7 @@ const LOGIN_USER = gql`
   }
 `;
 
-export default function LoginForm({ navigation }) {
+export default function LoginForm() {
   console.log("\n");
   console.log("\n");
   console.log("\n");
@@ -49,6 +49,7 @@ export default function LoginForm({ navigation }) {
     onError: (error) => {
       console.log({
         msg: "ooops! There was a login error",
+        error,
       });
       Alert.alert(
         "There was an error during the login process! \n\n Please try again"
