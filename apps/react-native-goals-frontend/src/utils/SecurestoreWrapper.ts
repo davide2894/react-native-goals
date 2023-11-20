@@ -1,7 +1,5 @@
 import { PersistentStorage } from "apollo3-cache-persist";
 
-import * as SecureStore from "expo-secure-store";
-
 /**
  * Wrapper for Expo's SecureStore for React Native.
  *
@@ -12,6 +10,8 @@ import * as SecureStore from "expo-secure-store";
  * });
  *
  */
+
+//TODO: create -> submit PR to include SecureStoreWrapper in apollo3-cache-persist supported prover wrappers
 
 export default class SecureStoreWrapper
   implements PersistentStorage<string | null>
