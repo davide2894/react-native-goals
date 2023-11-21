@@ -1,28 +1,14 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
-import {
-  AsyncStorageWrapper,
-  PersistentStorage,
-  persistCache,
-} from "apollo3-cache-persist";
+import { AsyncStorageWrapper, persistCache } from "apollo3-cache-persist";
 import { GoalType, GoalsQueryResult } from "./types";
-import * as SecureStore from "expo-secure-store";
-import SecureStoreWrapper from "./utils/SecurestoreWrapper";
 import { USER_GOALS_QUERY } from "./hooks/useGetGoals";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const cache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        read: () => goalsReactiveVar(),
-      },
-    },
-  },
-});
+export const cache = new InMemoryCache();
 
 persistCache({
   cache,
-  //TODO: open PR to https://github.com/apollographql/apollo-cache-persist to add SecureStoreWrapper
-  storage: new SecureStoreWrapper(SecureStore),
+  storage: new AsyncStorageWrapper(AsyncStorage),
 }).then((res) => console.log(res));
 
 export const goalsReactiveVar = makeVar<Array<GoalType>>([]);
