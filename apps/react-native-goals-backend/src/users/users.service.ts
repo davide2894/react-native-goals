@@ -41,9 +41,7 @@ export class UsersService {
     });
 
     if (!goals.length) {
-      for (let i = 0; i < 5; i++) {
-        goals.push(await this.createDummyUserGoal(id));
-      }
+      goals.push(await this.createDummyUserGoal(id));
 
       console.log(
         `no goals found for user with id ${id}\n proceeding to create a dummy goal`,
@@ -56,7 +54,7 @@ export class UsersService {
     console.log(`createDummyUserGoal ---> passed userId is: ${userId}`);
     const goal = await this.prismaService.goal.create({
       data: {
-        title: 'test',
+        title: `this is a dummy goal for user with id ${userId}`,
         actualScore: 0,
         maxScore: 5,
         minScore: 0,
