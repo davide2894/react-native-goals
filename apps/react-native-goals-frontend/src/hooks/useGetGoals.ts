@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Alert } from "react-native";
 import { gql } from "@apollo/client";
-import { updateLocalGoalState } from "../utils/goalState";
 
 export const USER_GOALS_QUERY = gql`
   query GoalsQuery {

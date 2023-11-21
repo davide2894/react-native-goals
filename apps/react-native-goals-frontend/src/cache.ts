@@ -11,8 +11,6 @@ persistCache({
   storage: new AsyncStorageWrapper(AsyncStorage),
 }).then((res) => console.log(res));
 
-export const goalsReactiveVar = makeVar<Array<GoalType>>([]);
-
 export const getAllGoalsInCache = () => {
   return cache.readQuery<GoalsQueryResult>({
     query: USER_GOALS_QUERY,
