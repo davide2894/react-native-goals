@@ -102,6 +102,7 @@ function Goal(props: { goal: GoalType }) {
       console.log({ error });
     },
   });
+
   const [resetScoreMutation] = useMutation(RESET_SCORE_MUTATION, {
     variables: {
       goalId: goal.id,
