@@ -1,8 +1,6 @@
 import { deleteAccessTokenFromStorage } from "../../utils/accessToken";
 import { Button } from "react-native";
 import { useAuthContext } from "../authProvider/AuthProvider";
-import { goalsReactiveVar } from "../../cache";
-import { deleteGoalsFromStorage } from "../../utils/goalsStorage";
 import { useApolloClient } from "@apollo/client";
 
 function SignOutButton() {
@@ -11,7 +9,7 @@ function SignOutButton() {
 
   async function handleSignOut() {
     await deleteAccessTokenFromStorage();
-    apolloClient.clearStore();
+    await apolloClient.clearStore();
     auth.updateAccessTokenInContext("");
   }
 
