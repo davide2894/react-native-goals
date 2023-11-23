@@ -26,8 +26,8 @@ export default function App() {
    * TODO:
    * [] style UI
    * [] monorepo: setup shorter names for startup commands
-   *   [] npm run start for backend
-   *   [] npm run start for frontend
+   *   [x] npm run start for backend
+   *   [x] npm run start for frontend
    *   [] npm run start in root package.json that should execute backend and frontend in two different terminals
    * [] write polished readme with iphone usage mock screenshot
    */

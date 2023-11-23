@@ -23,9 +23,8 @@ import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutat
 
 /**
  * TODO
- * [] replace expo secure store to mmkv for storage: expo has too small of a limit for max storage string length
+ * [x] replace expo secure store to mmkv for storage: expo has too small of a limit for max storage string length
  * [] fix warning:  WARN  Require cycle: src\hooks\useGetGoals.ts -> src\utils\goalState.ts -> src\cache.ts -> src\hooks\useGetGoals.ts
- * [] style UI
  * [] (Not necessary but it's a nice to have. this is the bottom of the priorities. the last thing I can approach but it's not essential to consider the project done.
  *    Refactor mutation files so that one file contains both the graphql statement and the apollo client hook
  * [] IMPORTANT jwt: set expiration to 1h and fix the expiration issue
