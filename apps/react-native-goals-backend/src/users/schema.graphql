@@ -33,6 +33,7 @@ type Query {
 type Mutation {
   register(email: String!, password: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
+  continueAsGuest(email: String!, password: String!): AuthPayload
   incrementScore(inputStuff: GoalScoreInput): Goal
   decrementScore(inputStuff: GoalScoreInput): Goal
   resetScore(goalId: Int!): Goal

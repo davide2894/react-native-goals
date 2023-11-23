@@ -45,6 +45,8 @@ export abstract class IMutation {
 
     abstract login(email: string, password: string): Nullable<AuthPayload> | Promise<Nullable<AuthPayload>>;
 
+    abstract continueAsGuest(email: string, password: string): Nullable<AuthPayload> | Promise<Nullable<AuthPayload>>;
+
     abstract incrementScore(inputStuff?: Nullable<GoalScoreInput>): Nullable<Goal> | Promise<Nullable<Goal>>;
 
     abstract decrementScore(inputStuff?: Nullable<GoalScoreInput>): Nullable<Goal> | Promise<Nullable<Goal>>;

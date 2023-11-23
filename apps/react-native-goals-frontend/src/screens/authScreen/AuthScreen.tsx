@@ -2,16 +2,17 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import RegistrationForm from "../../components/registrationForm/RegistrationForm";
 import LoginForm from "../../components/loginForm/LoginForm";
+import GuestAccessButton from "../../components/guestAccessButton/GuestAccessButton";
 
 /**
  * TODO
- * [] if user is logged
- *  [] redirect to /goals screen
+ * [x] if user is logged
+ *  [x] redirect to /goals screen
  * [] else show the auth content
  *  []login
- *    [] normal
+ *    [x] normal
+ *    [x] continue as guest btn
  *    [] google
- *    [] continue as guest btn
  *   [] create new account btn
  *      [] add
  *      [] onclick
@@ -32,6 +33,7 @@ function AuthScreen() {
       <View style={styles.container}>
         <RegistrationForm />
         <LoginForm />
+        <GuestAccessButton />
       </View>
     </>
   );
@@ -43,7 +45,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     borderWidth: 10,
     height: "100%",
   },

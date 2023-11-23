@@ -40,8 +40,13 @@ export class AuthService {
     return this.createAuthPayload(user);
   }
 
+  async logInGuest(user: User) {
+    console.log('inside  auth.serve.ts -> login method ');
+
+    return this.createAuthPayload(user);
+  }
+
   createAuthPayload(user) {
-    this.jwtService.decode;
     return {
       access_token: this.jwtService.sign(
         {
