@@ -2,10 +2,8 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
-import { GoalType } from "../../types";
 import NewGoalButton from "../../components/newGoalButton/NewGoalButton";
 import useGetGoals from "../../hooks/useGetGoals";
-import { Fragment } from "react";
 import { useApolloClient } from "@apollo/client";
 
 function GoalsScreen() {

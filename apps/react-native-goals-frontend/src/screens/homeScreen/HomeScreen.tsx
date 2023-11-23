@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
       "HomeScreen component rendered ---> button to GoalsScreen pressed"
     );
     console.log("HomeScreen component rendered ---> navigating to GoalsScreen");
-    navigation.navigate("GoalsScreen");
+    navigation.navigate("AuthScreen");
   }
 
   return (

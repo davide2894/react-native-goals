@@ -10,6 +10,9 @@ import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import { useAuthContext } from "../authProvider/AuthProvider";
+import { isFirstTimeAccessReactiveVar } from "../../cache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isFirstTimeAccessKey } from "../../constants";
 
 const REGISTER_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -40,6 +43,8 @@ export default function RegistrationForm() {
           console.log("successfully registered");
           console.log({ registrationInfo: response });
           await saveAccessTokenToStorage(response.register?.access_token);
+          await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
+          isFirstTimeAccessReactiveVar(false);
           auth.updateAccessTokenInContext(response.register?.access_token);
         }
       }
@@ -107,6 +112,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   height: {
-    height: 40,
+    height: 80,
   },
 });

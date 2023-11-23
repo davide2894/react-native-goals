@@ -1,1 +1,1 @@
-export const goalStorageKey = "goals";
+export const isFirstTimeAccessKey = "isFirstTimeAccess";

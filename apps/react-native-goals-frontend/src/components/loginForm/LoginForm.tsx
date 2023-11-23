@@ -2,16 +2,17 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Pressable,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import GoalsScreen from "../../screens/goalsScreen/GoalsScreen";
 import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import { useAuthContext } from "../authProvider/AuthProvider";
+import { isFirstTimeAccessReactiveVar } from "../../cache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isFirstTimeAccessKey } from "../../constants";
 
 const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -41,8 +42,10 @@ export default function LoginForm() {
       console.log("completed the login mutation ");
       console.log({ loginResponse: response });
       if (response.login) {
-        console.log({ response });
+        console.log({ loginResponse: response });
         await saveAccessTokenToStorage(response.login?.access_token);
+        await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
+        isFirstTimeAccessReactiveVar(false);
         auth.updateAccessTokenInContext(response.login?.access_token);
       }
     },
@@ -109,6 +112,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   height: {
-    height: 40,
+    height: 80,
   },
 });

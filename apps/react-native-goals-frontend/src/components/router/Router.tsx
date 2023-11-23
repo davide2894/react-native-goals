@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import AppStack from "../appStack/AppStack";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import AuthStack from "../authStack/AuthStack";
