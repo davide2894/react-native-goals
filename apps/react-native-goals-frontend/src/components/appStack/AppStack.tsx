@@ -13,7 +13,7 @@ function AppStack() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="GoalsScreen" component={GoalsScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
