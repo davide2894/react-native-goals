@@ -1,10 +1,9 @@
 import { deleteAccessTokenFromStorage } from "../../utils/accessToken";
-import { Button } from "react-native";
+import { TouchableHighlight, StyleSheet } from "react-native";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { useApolloClient } from "@apollo/client";
-import { isFirstTimeAccessReactiveVar } from "../../cache";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isFirstTimeAccessKey } from "../../constants";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { caribbeanGreen } from "../../style/globals/color";
 
 function SignOutButton() {
   const auth = useAuthContext();
@@ -17,7 +16,23 @@ function SignOutButton() {
     auth.updateAccessTokenInContext("");
   }
 
-  return <Button title="SignOut" onPress={handleSignOut}></Button>;
+  // return <Button title="SignOut" onPress={handleSignOut}></Button>;
+  return (
+    <TouchableHighlight
+      style={styles.button}
+      onPress={handleSignOut}
+      underlayColor={caribbeanGreen}>
+      <MaterialCommunityIcons name="logout-variant" size={24} color="black" />
+    </TouchableHighlight>
+  );
 }
 
 export default SignOutButton;
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 50,
+    padding: 10,
+    marginRight: 10,
+  },
+});
