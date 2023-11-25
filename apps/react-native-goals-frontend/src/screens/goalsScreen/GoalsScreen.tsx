@@ -46,9 +46,11 @@ function GoalsScreen() {
   }
 
   return (
-    <View>
-      <SignOutButton />
-      <Text style={styles.header}>Goals</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.h1}>Goals</Text>
+        <SignOutButton />
+      </View>
       {!loading && !error && (
         <FlatList
           data={data.userGoals}
@@ -63,11 +65,20 @@ function GoalsScreen() {
 export default GoalsScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 50,
+    padding: 10,
+  },
   header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+  },
+  h1: {
     borderBottomColor: "black",
     borderBottomWidth: 2,
     marginBottom: 30,
-    fontSize: 40,
-    textDecorationLine: "underline",
+    fontSize: 30,
   },
 });
