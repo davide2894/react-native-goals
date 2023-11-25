@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { GoalType, GoalsQueryResult } from "../../types";
 import {
-  Pressable,
+  TouchableHighlight,
   Modal,
   Text,
   TextInput,
@@ -20,6 +20,9 @@ import { useDebouncedCallback } from "use-debounce";
 import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
 import { getAllGoalsInCache } from "../../cache";
 import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
+
+import { AntDesign } from "@expo/vector-icons";
+import { caribbeanGreen, outerSpace } from "../../style/globals/color";
 
 /**
  * TODO
@@ -259,45 +262,56 @@ function Goal(props: { goal: GoalType }) {
         editable={true}
         onChangeText={handleTitleChange}
         value={editableTitleValue}></TextInput>
-      <View>
-        <View>
+      <View style={styles.actionsContainer}>
+        <View style={styles.score}>
           <Text>{actualScoreState}</Text>
           <Text>/</Text>
           <Text>{goal.maxScore}</Text>
         </View>
-        <View>
-          <Pressable
-            style={styles.score}
+        <View style={styles.scoreButtonsContainer}>
+          <TouchableHighlight
+            style={styles.scroreButton}
+            underlayColor={caribbeanGreen}
+            accessibilityLabel="Decrease by 1"
             onPress={() => {
               setActualScorestate((prev) => prev - 1);
               debouncedhandleDecrementScore();
             }}
             disabled={goal.actualScore === goal.minScore || isComplete}>
-            <ButtonIcon iconName="score-decrease-button" />
-            <Text>Decrease by 1</Text>
-          </Pressable>
-          <Pressable
-            style={styles.score}
+            <AntDesign name="minus" size={24} color="black" />
+          </TouchableHighlight>
+          <TouchableHighlight
+            accessibilityLabel="Increase by 1"
+            style={styles.scroreButton}
+            underlayColor={caribbeanGreen}
             onPress={() => {
               setActualScorestate((prev) => prev + 1);
               debouncedhandleIncrementScore();
             }}
             disabled={actualScoreState === goal.maxScore || isComplete}>
-            <Text>increase score by 1</Text>
-          </Pressable>
+            <AntDesign name="pluscircleo" size={24} color="black" />
+          </TouchableHighlight>
         </View>
-        <View>
-          <Pressable style={styles.deleteButton} onPress={handleDeleteGoal}>
-            <Text>delete goal</Text>
-          </Pressable>
-          <Pressable
-            style={styles.score}
+        <View style={styles.actionsContainer}>
+          <TouchableHighlight
+            accessibilityLabel="Delete goal"
+            style={styles.scroreButton}
+            underlayColor={caribbeanGreen}
+            onPress={handleDeleteGoal}>
+            <AntDesign name="delete" size={24} color="black" />
+          </TouchableHighlight>
+          <TouchableHighlight
+            accessibilityLabel="Reset goal"
+            style={styles.scroreButton}
             disabled={goal.actualScore === 0}
+            underlayColor={caribbeanGreen}
             onPress={handleResetGoal}>
-            <Text>reset goal</Text>
-          </Pressable>
+            <AntDesign name="reload1" size={24} color="black" />
+          </TouchableHighlight>
           {showEditGoalForm && (
-            <Modal onRequestClose={() => setShowEditGoalForm(false)}>
+            <Modal
+              style={styles.modal}
+              onRequestClose={() => setShowEditGoalForm(false)}>
               <GoalForm
                 goalToEditId={goal.id}
                 titleToEdit={goal.title}
@@ -317,49 +331,49 @@ export default Goal;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 10,
     marginBottom: 6,
     marginLeft: 6,
     marginRight: 6,
-    borderColor: "black",
-    borderWidth: 5,
-    borderRadius: 10,
     padding: 10,
+    maxWidth: "100%",
+    borderColor: "lightgray",
+    borderWidth: 1,
+    borderRadius: 20,
   },
   button: {
     color: "black",
   },
   completedButtonColor: {
-    color: "green",
+    color: caribbeanGreen,
   },
   title: {
     fontSize: 18,
+    marginBottom: 10,
   },
   titleBlack: {
-    color: "black",
+    color: outerSpace,
   },
   titleCompletedColor: {
     color: "green",
   },
   score: {
-    paddingBottom: 30,
+    display: "flex",
+    flexDirection: "row",
   },
   scoreButtonsContainer: {
     flexDirection: "row",
-    marginLeft: 10,
-    marginRight: 10,
   },
-  scoreButton: {
-    marginRight: 2,
-    marginLeft: 2,
+  scroreButton: {
+    display: "flex",
+    borderRadius: 50,
+    marginLeft: 10,
   },
   actionsContainer: {
+    display: "flex",
     flexDirection: "row",
-    marginTop: 2,
   },
-  resetButton: {
-    marginRight: 4,
-  },
-  deleteButton: {
-    paddingBottom: 50,
+  modal: {
+    height: "80%",
   },
 });
