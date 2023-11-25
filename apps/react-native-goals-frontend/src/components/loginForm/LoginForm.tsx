@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
@@ -13,6 +14,8 @@ import { useAuthContext } from "../authProvider/AuthProvider";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
+import GuestAccessButton from "../guestAccessButton/GuestAccessButton";
+import { caribbeanGreen } from "../../style/globals/color";
 
 const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -91,9 +94,13 @@ export default function LoginForm() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Pressable style={styles.height} onPress={handleLogin}>
-        <Text>Login</Text>
-      </Pressable>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={styles.defaultLoginButton}
+        onPress={handleLogin}>
+        <Text style={styles.defaultLoginButtonText}>Accedi</Text>
+      </TouchableOpacity>
+      <GuestAccessButton />
     </View>
   );
 }
@@ -103,15 +110,26 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     padding: 16,
+    marginTop: 200,
   },
   input: {
-    height: 40,
-    borderColor: "gray",
+    height: 70,
     borderWidth: 1,
+    borderColor: "lightgray",
+    borderRadius: 10,
     marginBottom: 12,
-    paddingHorizontal: 10,
+    padding: 25,
   },
-  height: {
-    height: 80,
+  defaultLoginButton: {
+    width: "100%",
+    borderRadius: 10,
+    marginBottom: 60,
+    padding: 15,
+    backgroundColor: caribbeanGreen,
+  },
+  defaultLoginButtonText: {
+    display: "flex",
+    textAlign: "center",
+    color: "black",
   },
 });

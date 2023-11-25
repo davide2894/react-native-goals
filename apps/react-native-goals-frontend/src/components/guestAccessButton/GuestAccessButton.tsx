@@ -47,13 +47,9 @@ function GuestAccessButton() {
   }
 
   return (
-    <Pressable
-      style={styles.button}
-      onPress={handleGuestAccess}
-      // className="mt-8 w-[255px] bg-yellow-500 px-4 py-2 border flex gap-2 rounded-sm text-black font-bold hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
-    >
+    <Pressable style={styles.button} onPress={handleGuestAccess}>
       {/* <ButtonIcon iconName="score-decrease-button" /> */}
-      <Text>Continue as guest</Text>
+      <Text style={styles.text}>Continue as guest</Text>
     </Pressable>
   );
 }
@@ -62,12 +58,16 @@ export default GuestAccessButton;
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
-    border: "1px solid black",
     borderWidth: 1,
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 300,
+    width: "100%",
+    height: 60,
+  },
+  text: {
+    display: "flex",
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: "auto",
+    marginBottom: "auto",
   },
 });

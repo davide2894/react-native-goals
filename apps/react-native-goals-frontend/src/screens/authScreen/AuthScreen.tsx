@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, StatusBar } from "react-native";
 import RegistrationForm from "../../components/registrationForm/RegistrationForm";
 import LoginForm from "../../components/loginForm/LoginForm";
 import GuestAccessButton from "../../components/guestAccessButton/GuestAccessButton";
@@ -31,9 +31,9 @@ function AuthScreen() {
   return (
     <>
       <View style={styles.container}>
-        <RegistrationForm />
+        <StatusBar barStyle="dark-content" />
         <LoginForm />
-        <GuestAccessButton />
+        {/* <RegistrationForm /> */}
       </View>
     </>
   );
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    borderWidth: 10,
     height: "100%",
+    padding: 10,
   },
 });

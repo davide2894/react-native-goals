@@ -1,18 +1,9 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache,
-} from "@apollo/client";
 import Router from "./src/components/router/Router";
+import { AuthProvider } from "./src/components/authProvider/AuthProvider";
 import {
-  AuthProvider,
-  useAuthContext,
-} from "./src/components/authProvider/AuthProvider";
-import AuthContext from "./src/contexts/authContext";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 export default function App() {
@@ -39,9 +30,13 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <SafeAreaProvider>
-        <Router />
-      </SafeAreaProvider>
+      {/* <SafeAreaProvider
+        style={{
+          backgroundColor: "red",
+          marginTop: 25,
+        }}>
+      </SafeAreaProvider> */}
+      <Router />
     </AuthProvider>
   );
 }
