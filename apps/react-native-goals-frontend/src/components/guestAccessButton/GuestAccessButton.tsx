@@ -4,11 +4,19 @@
 // import log from "@utils/log";
 // import { useDispatch } from "react-redux";
 import { useMutation } from "@apollo/client";
-import { Alert, Pressable, Text, StyleSheet } from "react-native";
+import {
+  Alert,
+  Pressable,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+} from "react-native";
 import { v4 as uuidv4 } from "uuid";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { REGISTER_USER } from "../../graphql/operations/mutations/registerUserMutation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { caribbeanGreen } from "../../style/globals/color";
 
 function GuestAccessButton() {
   console.log("guest access component rendered");
@@ -46,11 +54,19 @@ function GuestAccessButton() {
     await registerUserMutation();
   }
 
+  console.log("guest access button rendered");
+
   return (
-    <Pressable style={styles.button} onPress={handleGuestAccess}>
+    <TouchableHighlight
+      style={styles.button}
+      onPress={handleGuestAccess}
+      underlayColor={caribbeanGreen}>
       {/* <ButtonIcon iconName="score-decrease-button" /> */}
-      <Text style={styles.text}>Continue as guest</Text>
-    </Pressable>
+      <>
+        <MaterialCommunityIcons name="account" size={24} />
+        <Text style={styles.text}>Continue as guest</Text>
+      </>
+    </TouchableHighlight>
   );
 }
 
@@ -58,16 +74,19 @@ export default GuestAccessButton;
 
 const styles = StyleSheet.create({
   button: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
+    borderColor: "lightgray",
     borderRadius: 10,
     width: "100%",
     height: 60,
   },
   text: {
-    display: "flex",
     fontSize: 14,
     textAlign: "center",
-    marginTop: "auto",
-    marginBottom: "auto",
+    marginLeft: 8,
   },
 });
