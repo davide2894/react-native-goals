@@ -2,10 +2,10 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
-  Pressable,
   Alert,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
@@ -15,7 +15,7 @@ import { isFirstTimeAccessReactiveVar } from "../../cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
 import GuestAccessButton from "../guestAccessButton/GuestAccessButton";
-import { caribbeanGreen } from "../../style/globals/color";
+import { formStyles } from "../../style/formCommonStyles";
 
 const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -78,58 +78,37 @@ export default function LoginForm() {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity
-        activeOpacity={0.9}
-        style={styles.defaultLoginButton}
-        onPress={handleLogin}>
-        <Text style={styles.defaultLoginButtonText}>Accedi</Text>
-      </TouchableOpacity>
-      <GuestAccessButton />
+    <View
+      style={{
+        ...formStyles.container,
+        // display: "flex",
+        // flexDirection: "column",
+        // justifyContent: "center",
+      }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <TextInput
+          style={formStyles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={formStyles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={formStyles.submitButton}
+          onPress={handleLogin}>
+          <Text style={formStyles.submitText}>Login</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    padding: 16,
-    marginTop: 200,
-  },
-  input: {
-    height: 70,
-    borderWidth: 1,
-    borderColor: "lightgray",
-    borderRadius: 10,
-    marginBottom: 12,
-    padding: 25,
-  },
-  defaultLoginButton: {
-    width: "100%",
-    borderRadius: 10,
-    marginBottom: 60,
-    padding: 15,
-    backgroundColor: caribbeanGreen,
-  },
-  defaultLoginButtonText: {
-    display: "flex",
-    textAlign: "center",
-    color: "black",
-  },
-});

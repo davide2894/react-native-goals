@@ -13,18 +13,6 @@ function Router() {
   console.log("------------------------------------------------------------");
   console.log("Router component rendered");
   const auth = useAuthContext();
-  // const insets = useSafeAreaInsets();
-  // const styles = StyleSheet.create({
-  //   container: {
-  //     padding: 5,
-  //     marginTop: 20,
-  //     // Paddings to handle safe area
-  //     paddingTop: insets.top,
-  //     paddingBottom: insets.bottom,
-  //     paddingLeft: insets.left,
-  //     paddingRight: insets.right,
-  //   },
-  // });
 
   console.log({
     msg: "Router:::::access token state from context is",

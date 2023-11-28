@@ -30,12 +30,7 @@ export default function App() {
 
   return (
     <AuthProvider>
-      {/* <SafeAreaProvider
-        style={{
-          backgroundColor: "red",
-          marginTop: 25,
-        }}>
-      </SafeAreaProvider> */}
+      {/* <SafeAreaProvider style={{}}></SafeAreaProvider> */}
       <Router />
     </AuthProvider>
   );

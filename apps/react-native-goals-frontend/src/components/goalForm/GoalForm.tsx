@@ -1,19 +1,29 @@
-import { useState, SyntheticEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProps, GoalType, GoalsQueryResult } from "../../types";
-import { useAuthContext } from "../authProvider/AuthProvider";
-import { TextInput, View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useMutation } from "@apollo/client";
-import ADD_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
 import CREATE_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
 import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
+import { formStyles } from "../../style/formCommonStyles";
+import { lightGray } from "../../style/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-function GoalForm(props: FormProps) {
-  const [goalTitle, setGoalTitle] = useState(
-    props.titleToEdit ? props.titleToEdit : ""
-  );
-  const [goalMaxScore, setGoalMaxScore] = useState(
-    props.maxScoreToEdit ? props.maxScoreToEdit : ""
-  );
+function GoalForm(props: {
+  onKeyboardShow: (evt: any) => void;
+  onKeyboardHide: () => void;
+  closeBottomSheet: () => void;
+}) {
+  const [goalTitle, setGoalTitle] = useState("");
+  const [goalMaxScore, setGoalMaxScore] = useState("");
+  const isIosRef = useRef(Platform.OS === "ios");
   const [useCreateGoalMutation] = useMutation(CREATE_GOAL_MUTATION, {
     variables: {
       goalTitle: goalTitle,
@@ -46,58 +56,59 @@ function GoalForm(props: FormProps) {
   });
 
   async function handleCreateGoal() {
+    props.closeBottomSheet();
     await useCreateGoalMutation();
-    props.onGoalFormSubmit();
   }
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      `${isIosRef ? "keyboardWillShow" : "keyboardDidShow"}`,
+      props.onKeyboardShow
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      `${isIosRef ? "keyboardWillHide" : "keyboardDidHide"}`,
+      props.onKeyboardHide
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.input}>
-        <Text>Goal title:</Text>
+    <View style={formStyles.container}>
+      <KeyboardAvoidingView behavior={isIosRef ? "padding" : "height"}>
         <TextInput
           id="nameInput"
+          // autoFocus={true}
+          style={formStyles.input}
+          placeholder="Goal name or title"
+          placeholderTextColor={lightGray}
           value={goalTitle}
           onChangeText={(updatedText) => {
-            console.log("Goal form -->   goal title input");
             setGoalTitle(updatedText);
           }}
         />
-      </View>
-      <View style={styles.input}>
-        <Text>Times to meet per week:</Text>
         <TextInput
+          style={formStyles.input}
           id="scoreInput"
+          placeholder="Times per week"
+          placeholderTextColor={lightGray}
           value={goalMaxScore}
           onChangeText={(updatedText) => {
-            console.log("Goal form --> score input  ");
-
             setGoalMaxScore(updatedText);
           }}
         />
-      </View>
-      <Pressable style={styles.height} onPress={handleCreateGoal}>
-        <Text>Submit</Text>
-      </Pressable>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={formStyles.submitButton}
+          onPress={handleCreateGoal}>
+          <Text style={formStyles.submitText}>Add new goal</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    padding: 16,
-    marginTop: 45,
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 10,
-  },
-  height: {
-    height: 40,
-  },
-});
 
 export default GoalForm;

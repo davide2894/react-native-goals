@@ -1,15 +1,8 @@
-import {
-  Alert,
-  StyleSheet,
-  TouchableHighlight,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Modal } from "react-native";
 import { useState } from "react";
 import GoalForm from "../goalForm/GoalForm";
-import { caribbeanGreen } from "../../style/globals/color";
+// import { caribbeanGreen } from "../../style/globals/color";
 
 function NewGoalButton() {
   const [showNewGoalForm, setShowNewGoalForm] = useState(false);
@@ -30,16 +23,15 @@ function NewGoalButton() {
 
       {showNewGoalForm && (
         <Modal
+          style={styles.modalContentWrapper}
+          presentationStyle="pageSheet"
           animationType="slide"
           visible={showNewGoalForm}
           onRequestClose={() => {
             Alert.alert("Modal has been closed.");
             setShowNewGoalForm(!showNewGoalForm);
           }}>
-          <GoalForm
-            mode="add"
-            onGoalFormSubmit={() => setShowNewGoalForm(false)}
-          />
+          {/* <GoalForm onGoalFormSubmit={() => setShowNewGoalForm(false)} /> */}
         </Modal>
       )}
     </View>
@@ -56,7 +48,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     alignSelf: "center",
     borderColor: "lightgray",
-    backgroundColor: caribbeanGreen,
+    // backgroundColor: caribbeanGreen,
     borderWidth: 1,
     borderRadius: 10,
     width: "40%",
@@ -68,5 +60,13 @@ const styles = StyleSheet.create({
     display: "flex",
     textAlign: "center",
     color: "black",
+  },
+  modalContentWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 0,
+    height: "80%",
+    backgroundColor: "red",
   },
 });

@@ -5,7 +5,7 @@ import HomeScreen from "../../screens/homeScreen/HomeScreen";
 import { useReactiveVar } from "@apollo/client";
 import { Fragment } from "react";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
-import { white } from "../../style/globals/color";
+import { white } from "../../style/colors";
 
 function AuthStack() {
   console.log("\n");

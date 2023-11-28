@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import { GoalType, GoalsQueryResult } from "../../types";
 import {
   TouchableHighlight,
@@ -8,25 +8,29 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import GoalForm from "../goalForm/GoalForm";
 import trimString from "../../utils/trimString";
 import { useMutation } from "@apollo/client";
 import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
 import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
 import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
 import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
-import ButtonIcon from "../buttonIcon/ButtonIcon";
 import { useDebouncedCallback } from "use-debounce";
 import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
 import { getAllGoalsInCache } from "../../cache";
 import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
 
 import { AntDesign } from "@expo/vector-icons";
-import { caribbeanGreen, outerSpace } from "../../style/globals/color";
+import {
+  caribbeanGreen,
+  lightGray,
+  outerSpace,
+  white,
+} from "../../style/colors";
 
 /**
  * TODO
  * [x] replace expo secure store to mmkv for storage: expo has too small of a limit for max storage string length
+ * [] bug: goal edit title -> space are not accepted
  * [] IMPORTANT jwt: set expiration to 1h and fix the expiration issue
  * [] fix warning:  WARN  Require cycle: src\hooks\useGetGoals.ts -> src\utils\goalState.ts -> src\cache.ts -> src\hooks\useGetGoals.ts
  * [] (Not necessary but it's a nice to have. this is the bottom of the priorities. the last thing I can approach but it's not essential to consider the project done.
@@ -36,11 +40,13 @@ import { caribbeanGreen, outerSpace } from "../../style/globals/color";
 function Goal(props: { goal: GoalType }) {
   console.log("Goal.tsx -> rendering goal component");
   const goal = props.goal;
-  const [showEditGoalForm, setShowEditGoalForm] = useState(false);
   const [editableTitleValue, setEditableTitleValue] = useState(goal.title);
   const [actualScoreState, setActualScorestate] = useState(goal.actualScore);
   const isComplete = actualScoreState === goal.maxScore;
-
+  const shouldDisableDecreaseButton =
+    actualScoreState === goal.minScore || isComplete;
+  const shouldDisableIncreaseButton =
+    actualScoreState === goal.maxScore || isComplete;
   const [incrementScoreMutation] = useMutation(INCREMENT_SCORE_MUTATION, {
     variables: {
       id: goal.id,
@@ -236,14 +242,6 @@ function Goal(props: { goal: GoalType }) {
     await resetScoreMutation();
   }
 
-  const testTitleCssClasses = `text-lg goal-text ${
-    isComplete ? "after:content-['✓'] after:ml-2" : ""
-  }`;
-
-  function onEditFormOpenHandler() {
-    setShowEditGoalForm(true);
-  }
-
   async function handleTitleChange(text) {
     const trimmedEventValue = trimString(text);
     if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
@@ -253,74 +251,87 @@ function Goal(props: { goal: GoalType }) {
   }
 
   return (
-    <View data-testid="goalTest" style={styles.container}>
+    <View
+      data-testid="goalTest"
+      style={
+        isComplete
+          ? { ...styles.container, backgroundColor: caribbeanGreen }
+          : styles.container
+      }>
       <TextInput
-        style={{
-          ...styles.title,
-          ...(isComplete ? styles.titleCompletedColor : styles.titleBlack),
-        }}
+        style={
+          isComplete
+            ? {
+                ...styles.title,
+                ...styles.disabled,
+              }
+            : styles.title
+        }
         editable={true}
+        multiline={true}
         onChangeText={handleTitleChange}
         value={editableTitleValue}></TextInput>
       <View style={styles.actionsContainer}>
-        <View style={styles.score}>
-          <Text>{actualScoreState}</Text>
-          <Text>/</Text>
-          <Text>{goal.maxScore}</Text>
+        <View
+          style={
+            isComplete
+              ? { ...styles.scoreContainer, ...styles.disabled }
+              : styles.scoreContainer
+          }>
+          <Text>Score: </Text>
+          <View style={styles.score}>
+            <Text>{actualScoreState}</Text>
+            <Text>/</Text>
+            <Text>{goal.maxScore}</Text>
+          </View>
         </View>
         <View style={styles.scoreButtonsContainer}>
           <TouchableHighlight
-            style={styles.scroreButton}
+            style={
+              shouldDisableDecreaseButton
+                ? { ...styles.scroreButton, ...styles.disabled }
+                : styles.scroreButton
+            }
             underlayColor={caribbeanGreen}
             accessibilityLabel="Decrease by 1"
             onPress={() => {
               setActualScorestate((prev) => prev - 1);
               debouncedhandleDecrementScore();
             }}
-            disabled={goal.actualScore === goal.minScore || isComplete}>
-            <AntDesign name="minus" size={24} color="black" />
+            disabled={shouldDisableDecreaseButton}>
+            <AntDesign name="minuscircleo" size={24} color="black" />
           </TouchableHighlight>
           <TouchableHighlight
             accessibilityLabel="Increase by 1"
-            style={styles.scroreButton}
+            style={
+              shouldDisableIncreaseButton
+                ? { ...styles.scroreButton, ...styles.disabled }
+                : styles.scroreButton
+            }
             underlayColor={caribbeanGreen}
             onPress={() => {
               setActualScorestate((prev) => prev + 1);
               debouncedhandleIncrementScore();
             }}
-            disabled={actualScoreState === goal.maxScore || isComplete}>
+            disabled={shouldDisableIncreaseButton}>
             <AntDesign name="pluscircleo" size={24} color="black" />
-          </TouchableHighlight>
-        </View>
-        <View style={styles.actionsContainer}>
-          <TouchableHighlight
-            accessibilityLabel="Delete goal"
-            style={styles.scroreButton}
-            underlayColor={caribbeanGreen}
-            onPress={handleDeleteGoal}>
-            <AntDesign name="delete" size={24} color="black" />
           </TouchableHighlight>
           <TouchableHighlight
             accessibilityLabel="Reset goal"
-            style={styles.scroreButton}
-            disabled={goal.actualScore === 0}
+            style={{ ...styles.scroreButton, ...styles.resetButton }}
             underlayColor={caribbeanGreen}
             onPress={handleResetGoal}>
             <AntDesign name="reload1" size={24} color="black" />
           </TouchableHighlight>
-          {showEditGoalForm && (
-            <Modal
-              style={styles.modal}
-              onRequestClose={() => setShowEditGoalForm(false)}>
-              <GoalForm
-                goalToEditId={goal.id}
-                titleToEdit={goal.title}
-                maxScoreToEdit={goal.maxScore.toString()}
-                mode="edit"
-                onGoalFormSubmit={() => setShowEditGoalForm(false)}
-              />
-            </Modal>
-          )}
+          <>
+            <TouchableHighlight
+              accessibilityLabel="Delete goal"
+              style={{ ...styles.scroreButton, ...styles.deleteButton }}
+              underlayColor={caribbeanGreen}
+              onPress={handleDeleteGoal}>
+              <AntDesign name="delete" size={24} color="black" />
+            </TouchableHighlight>
+          </>
         </View>
       </View>
     </View>
@@ -335,12 +346,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginLeft: 6,
     marginRight: 6,
-    padding: 10,
-    maxWidth: "100%",
-    borderColor: "lightgray",
-    borderWidth: 1,
+    padding: 8,
     borderRadius: 20,
+    borderWidth: 1,
   },
+
   button: {
     color: "black",
   },
@@ -357,23 +367,43 @@ const styles = StyleSheet.create({
   titleCompletedColor: {
     color: "green",
   },
+  actionsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 8,
+    alignItems: "baseline",
+  },
+  scoreContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "baseline",
+    maxWidth: 80,
+  },
   score: {
     display: "flex",
     flexDirection: "row",
   },
   scoreButtonsContainer: {
+    display: "flex",
     flexDirection: "row",
+    marginLeft: 12,
+  },
+  resetButton: {
+    marginLeft: 12,
+    borderWidth: 1,
+  },
+  deleteButton: {
+    marginLeft: 12,
   },
   scroreButton: {
     display: "flex",
-    borderRadius: 50,
+    borderRadius: 48,
     marginLeft: 10,
+    borderWidth: 1,
+    padding: 8,
   },
-  actionsContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  modal: {
-    height: "80%",
+  disabled: {
+    opacity: 0.2,
+    pointerEvents: "none",
   },
 });

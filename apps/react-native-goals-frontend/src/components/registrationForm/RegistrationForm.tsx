@@ -5,6 +5,9 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
@@ -13,6 +16,8 @@ import { useAuthContext } from "../authProvider/AuthProvider";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
+import { formStyles } from "../../style/formCommonStyles";
+import { lightGray } from "../../style/colors";
 
 const REGISTER_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -75,25 +80,42 @@ export default function RegistrationForm() {
   console.log("RegistrationForm component rendered");
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Pressable style={styles.height} onPress={handleRegister}>
-        <Text>Register</Text>
-      </Pressable>
+    <View
+      style={{
+        ...formStyles.container,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        padding: 16,
+        marginTop: 60,
+      }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <TextInput
+          autoFocus={true}
+          style={formStyles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor={lightGray}
+        />
+        <TextInput
+          style={formStyles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholderTextColor={lightGray}
+        />
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={formStyles.submitButton}
+          onPress={handleRegister}>
+          <Text style={formStyles.submitText}>Register</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 }

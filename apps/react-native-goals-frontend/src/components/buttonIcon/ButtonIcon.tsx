@@ -21,8 +21,8 @@ function ButtonIcon(props: { iconName: string }) {
       justifyContent: "center",
       width: 40,
       height: 40,
-      backgroundColor: "black",
-      backgroundImage: `url("./${props.iconName}.svg")`,
+      // backgroundColor: "black",
+      // backgroundImage: `url("./${props.iconName}.svg")`,
     },
     text: {
       //   color: "white",
@@ -30,7 +30,6 @@ function ButtonIcon(props: { iconName: string }) {
       lineHeight: 84,
       fontWeight: "bold",
       textAlign: "center",
-      backgroundColor: "#000000c0",
     },
   });
 

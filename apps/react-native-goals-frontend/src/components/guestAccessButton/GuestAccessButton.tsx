@@ -16,7 +16,7 @@ import { isFirstTimeAccessReactiveVar } from "../../cache";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { REGISTER_USER } from "../../graphql/operations/mutations/registerUserMutation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { caribbeanGreen } from "../../style/globals/color";
+import { caribbeanGreen } from "../../style/colors";
 
 function GuestAccessButton() {
   console.log("guest access component rendered");
@@ -61,7 +61,6 @@ function GuestAccessButton() {
       style={styles.button}
       onPress={handleGuestAccess}
       underlayColor={caribbeanGreen}>
-      {/* <ButtonIcon iconName="score-decrease-button" /> */}
       <>
         <MaterialCommunityIcons name="account" size={24} />
         <Text style={styles.text}>Continue as guest</Text>
@@ -81,8 +80,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "lightgray",
     borderRadius: 10,
-    width: "100%",
     height: 60,
+    marginTop: 16,
   },
   text: {
     fontSize: 14,
