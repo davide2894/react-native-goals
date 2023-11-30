@@ -3,7 +3,6 @@ import { Button, View, Text, ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
 
 import { aquaHaze, outerSpace, white } from "../../style/colors";
-import { useSharedValue, withSpring } from "react-native-reanimated";
 
 function HomeScreen({ navigation }) {
   console.log("\n");
@@ -11,8 +10,6 @@ function HomeScreen({ navigation }) {
   console.log("\n");
   console.log("------------------------------------------------------------");
   console.log("HomeScreen component rendered");
-  const ring1padding = useSharedValue(0);
-  const ring2padding = useSharedValue(0);
 
   useEffect(() => {
     setTimeout(() => {
