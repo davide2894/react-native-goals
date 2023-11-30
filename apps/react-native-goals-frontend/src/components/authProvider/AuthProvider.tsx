@@ -29,20 +29,19 @@ function AuthProvider({ children }) {
         console.log(
           "AuthProvider of context --> inside useEffect --> updating access token state with token in storage"
         );
-        setAccessTokenStateValue(access_token);
       }
+      setAccessTokenStateValue(await getAccessTokenFromStorage());
     };
 
     try {
+      console.log("tryGetAccessToken() executed");
       tryGetAccessToken();
     } catch (error) {
       console.log({ error });
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  async function login(email, password) {}
+  }, [accessTokenStateValue, setAccessTokenStateValue, setLoading]);
 
   function updateAccessTokenInContext(access_token: string) {
     console.log("Auth provider: updating access token state");
@@ -54,17 +53,11 @@ function AuthProvider({ children }) {
     setAccessTokenStateValue("");
   }
 
-  async function register(email, password) {
-    //
-  }
-
   return (
     <AuthContext.Provider
       value={{
         accessTokenStateValue,
         loading,
-        login,
-        register,
         updateAccessTokenInContext,
         logOut,
       }}>
@@ -77,7 +70,7 @@ function useAuthContext() {
   const context = useContext(AuthContext);
   console.log("useAutContext called");
   if (context) {
-    console.log("useAuthContext ---> this is the retrieved token info");
+    console.log("useAuthContext ---> this is the retrieved auth context info");
     console.log({
       msg: "retrieving access token",
       accessToken: {

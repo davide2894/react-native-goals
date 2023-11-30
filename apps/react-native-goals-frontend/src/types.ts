@@ -6,8 +6,6 @@ export type AuthData = {
 export type AuthContextData = {
   accessTokenStateValue: string;
   loading: boolean;
-  login: (email, password) => Promise<any>;
-  register: (email, password) => Promise<any>;
   updateAccessTokenInContext: (access_token) => void;
   logOut: () => Promise<void>;
 };
