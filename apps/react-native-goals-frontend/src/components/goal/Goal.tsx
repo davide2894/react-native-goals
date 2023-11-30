@@ -167,6 +167,7 @@ function Goal(props: { goal: GoalType }) {
     },
     onError: (error) => {
       console.log({ error });
+      displayGeneralErrorMessage();
     },
   });
 
