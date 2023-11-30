@@ -24,8 +24,8 @@ import {
 } from "../../style/colors";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
 import { useRef, useState } from "react";
-import { Entypo } from "@expo/vector-icons";
 import CloseButton from "../../components/closeModalButton/CloseButton";
+import AddGoalButton from "../../../addGoalButton/AddGoalButton";
 
 function GoalsScreen() {
   console.log("\n");
@@ -39,7 +39,6 @@ function GoalsScreen() {
   const translateY = useRef(new Animated.Value(height)).current;
   const auth = useAuthContext();
   const { loading, error, data } = useGetGoals();
-  const client = useApolloClient();
   const bottomSheetHeight = 400;
 
   console.log(
@@ -127,57 +126,37 @@ function GoalsScreen() {
   }
 
   return (
-    <View>
+    <View style={{ maxHeight: height, position: "relative" }}>
       <View style={{ ...styles.container, ...screenCommonStyles.layout }}>
         <View style={styles.header}>
           <Text style={styles.h1}>Goals</Text>
           <SignOutButton />
         </View>
         {!loading && !error && (
-          <FlatList
-            data={data.userGoals}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={handleRenderItem}></FlatList>
+          <>
+            <FlatList
+              data={data.userGoals}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={handleRenderItem}></FlatList>
+            <AddGoalButton onPressCallback={openBottomSheet} />
+          </>
         )}
-        {/* {!loading && !error && <NewGoalButton />} */}
-        <View>
-          <TouchableHighlight
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: 24,
-              width: 72,
-              height: 72,
-              borderRadius: 1000,
-              borderWidth: 1,
-              borderColor: lightGray,
-            }}
-            accessibilityLabel="Add a new goal to your list"
-            onPress={openBottomSheet}
-            underlayColor={caribbeanGreen}>
-            <Entypo name="new-message" size={48} color={outerSpace} />
-          </TouchableHighlight>
-        </View>
+        {isVisible && (
+          <BottomSheet
+            translateY={translateY}
+            bottomSheetHeight={bottomSheetHeight}>
+            <CloseButton
+              onCloseButtonPress={closeBottomSheet}
+              a11yText={"Close form and bottom sheet"}
+            />
+            <GoalForm
+              onKeyboardShow={onKeyboardShow}
+              onKeyboardHide={onKeyboardHide}
+              closeBottomSheet={closeBottomSheet}
+            />
+          </BottomSheet>
+        )}
       </View>
-      {isVisible && (
-        <BottomSheet
-          translateY={translateY}
-          bottomSheetHeight={bottomSheetHeight}>
-          <CloseButton
-            onCloseButtonPress={closeBottomSheet}
-            a11yText={"Close form and bottom sheet"}
-          />
-          <GoalForm
-            onKeyboardShow={onKeyboardShow}
-            onKeyboardHide={onKeyboardHide}
-            closeBottomSheet={closeBottomSheet}
-          />
-        </BottomSheet>
-      )}
     </View>
   );
 }
