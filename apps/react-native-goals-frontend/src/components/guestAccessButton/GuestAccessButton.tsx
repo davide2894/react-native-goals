@@ -3,7 +3,7 @@
 // import { isSubmitting } from "@formSlice";
 // import log from "@utils/log";
 // import { useDispatch } from "react-redux";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import {
   Alert,
   Pressable,
@@ -17,25 +17,34 @@ import { useAuthContext } from "../authProvider/AuthProvider";
 import { REGISTER_USER } from "../../graphql/operations/mutations/registerUserMutation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { caribbeanGreen } from "../../style/colors";
+import { saveAccessTokenToStorage } from "../../utils/accessToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isFirstTimeAccessKey } from "../../constants";
 
 function GuestAccessButton() {
   console.log("guest access component rendered");
   const auth = useAuthContext();
+  const apolloClient = useApolloClient();
   const [registerUserMutation] = useMutation(REGISTER_USER, {
     variables: {
       email: `reactdailygoaltrackerguestprofile${uuidv4()}11${uuidv4()}@yopmail.com`,
       password: `guestAccessPassword123${uuidv4()}`,
     },
     onCompleted: async (response) => {
-      console.log("===========================================");
-      console.log("completed the login mutation ");
-      console.log({ loginResponse: response });
-      if (response.register) {
-        console.log({ loginResponse: response });
-        // await saveAccessTokenToStorage(response.login?.access_token);
-        // await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
-        isFirstTimeAccessReactiveVar(false);
-        auth.updateAccessTokenInContext(response.register?.access_token);
+      console.log({
+        msg: "registered new guest user",
+        response,
+      });
+      if (response) {
+        if (response.register) {
+          console.log("successfully registered");
+          console.log({ registrationInfo: response });
+          await apolloClient.resetStore();
+          await saveAccessTokenToStorage(response.register.access_token);
+          await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
+          isFirstTimeAccessReactiveVar(false);
+          auth.updateAccessTokenInContext(response.register.access_token);
+        }
       }
     },
     onError: (error) => {

@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
@@ -35,6 +35,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = useAuthContext();
+  const apolloClient = useApolloClient();
   const [loginUserMutation] = useMutation(LOGIN_USER, {
     variables: {
       email,
@@ -46,6 +47,7 @@ export default function LoginForm() {
       console.log({ loginResponse: response });
       if (response.login) {
         console.log({ loginResponse: response });
+        await apolloClient.resetStore();
         await saveAccessTokenToStorage(response.login?.access_token);
         await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
         isFirstTimeAccessReactiveVar(false);
@@ -81,9 +83,6 @@ export default function LoginForm() {
     <View
       style={{
         ...formStyles.container,
-        // display: "flex",
-        // flexDirection: "column",
-        // justifyContent: "center",
       }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}>

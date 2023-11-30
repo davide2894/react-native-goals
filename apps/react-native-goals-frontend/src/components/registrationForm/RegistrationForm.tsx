@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
@@ -32,6 +32,7 @@ export default function RegistrationForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = useAuthContext();
+  const apolloClient = useApolloClient();
   const [registerUserMutation] = useMutation(REGISTER_USER, {
     variables: {
       email,
@@ -47,6 +48,7 @@ export default function RegistrationForm() {
         if (response.register) {
           console.log("successfully registered");
           console.log({ registrationInfo: response });
+          await apolloClient.resetStore();
           await saveAccessTokenToStorage(response.register?.access_token);
           await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
           isFirstTimeAccessReactiveVar(false);

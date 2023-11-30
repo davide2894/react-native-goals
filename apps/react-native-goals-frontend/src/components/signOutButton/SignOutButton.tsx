@@ -12,7 +12,7 @@ function SignOutButton() {
   async function handleSignOut() {
     console.log("singout button pressed");
     await deleteAccessTokenFromStorage();
-    await apolloClient.clearStore();
+    await apolloClient.resetStore();
     auth.updateAccessTokenInContext("");
   }
 
