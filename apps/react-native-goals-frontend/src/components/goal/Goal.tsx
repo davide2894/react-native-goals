@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   StyleSheet,
+  Alert,
 } from "react-native";
 import trimString from "../../utils/trimString";
 import { useMutation } from "@apollo/client";
@@ -26,15 +27,27 @@ import {
   outerSpace,
   white,
 } from "../../style/colors";
+import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
 
 /**
  * TODO
  * [x] replace expo secure store to mmkv for storage: expo has too small of a limit for max storage string length
- * [] bug: goal edit title -> space are not accepted
- * [] IMPORTANT jwt: set expiration to 1h and fix the expiration issue
- * [] fix warning:  WARN  Require cycle: src\hooks\useGetGoals.ts -> src\utils\goalState.ts -> src\cache.ts -> src\hooks\useGetGoals.ts
- * [] (Not necessary but it's a nice to have. this is the bottom of the priorities. the last thing I can approach but it's not essential to consider the project done.
- *    Refactor mutation files so that one file contains both the graphql statement and the apollo client hook
+ * [x] bug: goal edit title -> space are not accepted
+ * [x] bug: delete goal to db FOR GUEST USER doesn't work
+ * [x] bug: reset goal to db FOR GUEST USER doesn't work
+ * [x] bug: increase goal to db FOR GUEST USER db doesn't work
+ * [x] bug: increase goal to db FOR GUEST USER db doesn't work
+ * [x] bug: post edit goal title to db FOR GUEST USER db doesn't work
+ * [x] tech debt: use async storage for user auth flows as well (currently still using expo securestore, which is wrong)
+   [x] show user welcome message
+    [x] registered -> "Welcome <user name>"
+    [x] login -> "Welcome <user name>""
+    [x] guest -> "Beware! This is a temporary account: when you logout all data will be lost. Be sure to register properly if you want to keep track of your goals consistently"
+ * jwt: 
+    [] should i really use another type of storage that's not async storage for jwt?
+    [] set expiration to 1h and fix the expiration issue
+ * [] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
+ * [] cover project with unit tests
  * */
 
 function Goal(props: { goal: GoalType }) {
