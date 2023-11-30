@@ -1,14 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessTokenKey } from "../constants";
+import * as SecureStore from "expo-secure-store";
 
 export async function saveAccessTokenToStorage(access_token: string) {
-  return await AsyncStorage.setItem(accessTokenKey, access_token);
+  return await SecureStore.setItemAsync("access_token", access_token);
 }
 
 export async function getAccessTokenFromStorage() {
-  return await AsyncStorage.getItem(accessTokenKey);
+  return await SecureStore.getItemAsync("access_token");
 }
 
 export async function deleteAccessTokenFromStorage() {
-  return await AsyncStorage.removeItem(accessTokenKey);
+  await SecureStore.deleteItemAsync("access_token");
+  console.log("storage -----> access token deleted from storage");
 }
