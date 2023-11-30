@@ -1,14 +1,15 @@
 import * as SecureStore from "expo-secure-store";
+import { accessTokenKey } from "../constants";
 
 export async function saveAccessTokenToStorage(access_token: string) {
-  return await SecureStore.setItemAsync("access_token", access_token);
+  return await SecureStore.setItemAsync(accessTokenKey, access_token);
 }
 
 export async function getAccessTokenFromStorage() {
-  return await SecureStore.getItemAsync("access_token");
+  return await SecureStore.getItemAsync(accessTokenKey);
 }
 
 export async function deleteAccessTokenFromStorage() {
-  await SecureStore.deleteItemAsync("access_token");
+  await SecureStore.deleteItemAsync(accessTokenKey);
   console.log("storage -----> access token deleted from storage");
 }
