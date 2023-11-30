@@ -25,8 +25,9 @@ export default function App() {
 
   return (
     <AuthProvider>
-      {/* <SafeAreaProvider style={{}}></SafeAreaProvider> */}
-      <Router />
+      <SafeAreaProvider>
+        <Router />
+      </SafeAreaProvider>
     </AuthProvider>
   );
 }
