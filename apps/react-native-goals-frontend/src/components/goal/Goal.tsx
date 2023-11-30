@@ -44,7 +44,7 @@ import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
     [x] login -> "Welcome <user name>""
     [x] guest -> "Beware! This is a temporary account: when you logout all data will be lost. Be sure to register properly if you want to keep track of your goals consistently"
  * jwt: 
-    [] should i really use another type of storage that's not async storage for jwt?
+    [x] should i really use another type of storage that's not async storage for jwt?
     [] set expiration to 1h and fix the expiration issue
  * [] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
  * [] cover project with unit tests
