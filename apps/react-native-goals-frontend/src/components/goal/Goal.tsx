@@ -74,7 +74,7 @@ function Goal(props: { goal: GoalType }) {
       console.log(res);
     },
     onError: (error) => {
-      console.log({ error });
+      console.log(error);
     },
   });
 
@@ -226,6 +226,35 @@ function Goal(props: { goal: GoalType }) {
     { trailing: true }
   );
 
+  const debouncedTitleTrim = useDebouncedCallback(function (text) {
+    console.log({ text });
+    const trimmedEventValue = trimString(text);
+    if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
+      console.log("setting new title state");
+      setEditableTitleValue(trimmedEventValue);
+    } else {
+      console.log("not trimmed");
+    }
+  }, 500);
+
+  function handleTitleTrimming(text) {
+    console.log({ text });
+    const trimmedEventValue = trimString(text);
+    if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
+      console.log("setting new title state");
+      setEditableTitleValue(trimmedEventValue);
+    } else {
+      console.log("not trimmed");
+    }
+  }
+
+  async function handleTitleChange(text) {
+    console.log("handling title change");
+    console.log(`current title text value: ${text}`);
+    handleTitleTrimming(text);
+    await debouncedEditTitleMutation();
+  }
+
   async function handleDecrementScore() {
     console.log(
       "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
@@ -240,14 +269,6 @@ function Goal(props: { goal: GoalType }) {
   async function handleResetGoal() {
     setActualScorestate(0);
     await resetScoreMutation();
-  }
-
-  async function handleTitleChange(text) {
-    const trimmedEventValue = trimString(text);
-    if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
-      setEditableTitleValue(trimmedEventValue);
-    }
-    await debouncedEditTitleMutation();
   }
 
   return (
