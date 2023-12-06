@@ -1,16 +1,5 @@
-// import ButtonIcon from "@components/buttonIcon/ButtonIcon";
-// import { registerWithEmailAndPassword } from "@firebase";
-// import { isSubmitting } from "@formSlice";
-// import log from "@utils/log";
-// import { useDispatch } from "react-redux";
 import { useApolloClient, useMutation } from "@apollo/client";
-import {
-  Alert,
-  Pressable,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-} from "react-native";
+import { Text, StyleSheet, TouchableHighlight } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import { useAuthContext } from "../authProvider/AuthProvider";
@@ -20,6 +9,7 @@ import { caribbeanGreen } from "../../style/colors";
 import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
+import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
 
 function GuestAccessButton() {
   console.log("guest access component rendered");
@@ -52,9 +42,7 @@ function GuestAccessButton() {
         msg: "ooops! There was a login error",
         error,
       });
-      Alert.alert(
-        "There was an error during the login process! \n\n Please try again"
-      );
+      displayGeneralErrorMessage();
     },
   });
 
@@ -62,8 +50,6 @@ function GuestAccessButton() {
     console.log("guest user registration -> registering guest user");
     await registerUserMutation();
   }
-
-  console.log("guest access button rendered");
 
   return (
     <TouchableHighlight
