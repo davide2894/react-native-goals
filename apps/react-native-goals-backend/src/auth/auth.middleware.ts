@@ -24,8 +24,6 @@ export class AuthMiddleWare implements NestMiddleware {
       try {
         console.log('inside try{} catch() {}');
 
-        // TODO:
-        // bug: when token is expired, it doesn't throw an error
         const decodedAccessToken = this.jwtService.verify(accessToken, {
           ignoreExpiration: true,
           complete: true,
@@ -40,16 +38,6 @@ export class AuthMiddleWare implements NestMiddleware {
         res.status(401).json({ message: 'Unauthorized' });
       }
     }
-    // req['user'] = {
-    //   header: { alg: 'HS256', typ: 'JWT' },
-    //   payload: {
-    //     email: 'test.itau@mail.com',
-    //     id: 7,
-    //     iat: 1699567229,
-    //     exp: 1699570829,
-    //   },
-    //   signature: '9cXrK4hmVUpphI-zCk1vEXpYf0Qav_76RUPhFwO9Mdo',
-    // };
     next();
   }
 }
