@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
 import { formStyles } from "../../style/formCommonStyles";
 import { lightGray } from "../../style/colors";
+import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
 
 const REGISTER_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -50,6 +51,7 @@ export default function RegistrationForm() {
           console.log({ registrationInfo: response });
           await apolloClient.resetStore();
           await saveAccessTokenToStorage(response.register?.access_token);
+          await saveRefreshTokenToStorage(response.register?.refresh_token);
           await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
           isFirstTimeAccessReactiveVar(false);
           auth.updateAccessTokenInContext(response.register?.access_token);

@@ -2,7 +2,7 @@ import { CreateUserDto } from './create-user.dto';
 import { Logger } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
-import { AuthPayload, Goal } from 'src/graphql';
+import { Goal } from 'src/graphql';
 import { UsersService } from './users.service';
 
 @Resolver('User')
@@ -16,9 +16,6 @@ export class UserResolver {
   async userGoals(@Context('req') req: any) {
     console.log('inside user goals resolver');
     console.log('user intercepted in request header');
-    // retrieve all goals associated to the authenticated user
-    // const user = await this.usersService.getUserById(req?.user?.id);
-    // console.log({ validatedUserById: user });
     const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
     console.log('goals  that are going to be sent to the frontend');
     console.log({ goals });
@@ -28,12 +25,6 @@ export class UserResolver {
   @Query(() => String)
   async hello(@Context('req') req: any) {
     console.log({ req });
-    // console.log(
-    //   'users.resolvers.ts ---> hello query resolver --> logging user data',
-    // );
-    // console.log({ reqUser: req.user });
-    // const user = await this.usersService.getUserById(req?.user?.id);
-    // console.log({ validatedUserById: user });
     return `hello`;
   }
 
@@ -41,7 +32,7 @@ export class UserResolver {
   async register(
     @Args('email') email: string,
     @Args('password') password: string,
-  ): Promise<AuthPayload> {
+  ): Promise<object> {
     Logger.log('inside UserResolver -> register method');
     Logger.log({
       email,
@@ -55,7 +46,7 @@ export class UserResolver {
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
-  ): Promise<AuthPayload> {
+  ): Promise<object> {
     const createUserDto: CreateUserDto = { email, password };
     const validatedUser = await this.authService.validateUser(createUserDto);
     if (validatedUser) {
@@ -64,6 +55,19 @@ export class UserResolver {
       console.log({ loggedUser });
       return loggedUser;
     }
+  }
+
+  @Mutation()
+  async refreshTokens(@Context('req') req: any): Promise<object> {
+    const user = await this.usersService.getUserById(req?.user?.payload.id);
+    const authTokens = await this.authService.createAuthTokens(user);
+
+    return authTokens;
+  }
+
+  @Mutation()
+  async createAuthTokens(user) {
+    return await this.authService.createAuthTokens(user);
   }
 
   @Mutation()

@@ -1,33 +1,28 @@
 import {
-  View,
-  Text,
   StyleSheet,
-  FlatList,
-  Button,
-  TouchableHighlight,
   Animated,
+  FlatList,
+  Text,
+  View,
   useWindowDimensions,
 } from "react-native";
-import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
-import NewGoalButton from "../../components/newGoalButton/NewGoalButton";
-import useGetGoals from "../../hooks/useGetGoals";
-import { useApolloClient } from "@apollo/client";
-import BottomSheet from "../../components/bottomSheet/BottomSheet";
-import GoalForm from "../../components/goalForm/GoalForm";
-import {
-  caribbeanGreen,
-  lightGray,
-  outerSpace,
-  white,
-} from "../../style/colors";
-import { screenCommonStyles } from "../../style/screenCommonStyles";
-import { useRef, useState } from "react";
-import CloseButton from "../../components/closeModalButton/CloseButton";
+import { ServerError, useApolloClient, useQuery } from "@apollo/client";
+import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { useState, useRef } from "react";
 import AddGoalButton from "../../../addGoalButton/AddGoalButton";
+import CloseButton from "../../components/closeModalButton/CloseButton";
+import GoalForm from "../../components/goalForm/GoalForm";
+import SignOutButton from "../../components/signOutButton/SignOutButton";
+import { screenCommonStyles } from "../../style/screenCommonStyles";
+import BottomSheet from "../../components/bottomSheet/BottomSheet";
+import { deleteAccessTokenFromStorage } from "../../utils/accessToken";
+import apolloClient from "../../utils/apolloClient";
 
-function GoalsScreen() {
+const bottomSheetHeight = 400;
+
+function GoalsScreen({ navigation }) {
   console.log("\n");
   console.log("\n");
   console.log("\n");
@@ -38,8 +33,20 @@ function GoalsScreen() {
   const { height } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(height)).current;
   const auth = useAuthContext();
-  const { loading, error, data } = useGetGoals();
-  const bottomSheetHeight = 400;
+  const apolloClient = useApolloClient();
+
+  const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
+    onCompleted: async (response) => {
+      if (response && response.length) {
+        console.log("goals fetched correctly");
+        console.log("goals response is as follows");
+        console.log({ response: response.userGoals.length });
+      }
+    },
+    onError: async (error) => {
+      console.log(error);
+    },
+  });
 
   console.log(
     "GoalsScreen component --> auth context retried in component is the following"
@@ -64,7 +71,6 @@ function GoalsScreen() {
   }
 
   function handleRenderItem({ item, ..._ }) {
-    // console.log({ currentRenderItem: item });
     return <Goal key={item.id} goal={item} />;
   }
 

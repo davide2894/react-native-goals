@@ -17,8 +17,8 @@ model User {
   email String @unique
   password String
   goals Goal[]
+  refreshTokens RefreshToken[]
 }
-
 model Goal {
   id Int @id @default(autoincrement())
   title String
@@ -27,5 +27,13 @@ model Goal {
   actualScore Int
   userIdRef Int
   timestamp Int
+  user User @relation(fields: [userIdRef], references: [id])
+}
+
+model RefreshToken {
+  id Int @id @default(autoincrement())
+  token String
+  userIdRef  Int
+  expires DateTime
   user User @relation(fields: [userIdRef], references: [id])
 }

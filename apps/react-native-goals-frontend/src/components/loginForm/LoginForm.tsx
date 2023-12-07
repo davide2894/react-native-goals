@@ -14,8 +14,8 @@ import { useAuthContext } from "../authProvider/AuthProvider";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
-import GuestAccessButton from "../guestAccessButton/GuestAccessButton";
 import { formStyles } from "../../style/formCommonStyles";
+import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
 
 const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -49,6 +49,7 @@ export default function LoginForm() {
         console.log({ loginResponse: response });
         await apolloClient.resetStore();
         await saveAccessTokenToStorage(response.login?.access_token);
+        await saveRefreshTokenToStorage(response.login?.refresh_token);
         await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
         isFirstTimeAccessReactiveVar(false);
         auth.updateAccessTokenInContext(response.login?.access_token);

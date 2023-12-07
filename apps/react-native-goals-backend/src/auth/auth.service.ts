@@ -4,6 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { AccessTokenPayload, RefreshTokenPayload } from 'src/graphql';
 
 @Injectable()
 export class AuthService {
@@ -30,35 +31,57 @@ export class AuthService {
     if (!newUser) {
       throw new Error('Registration failed');
     } else {
-      return this.createAuthPayload(newUser);
+      return this.createAuthTokens(newUser);
     }
   }
 
   async login(user: User) {
     console.log('inside auth.serve.ts -> login method ');
 
-    return this.createAuthPayload(user);
+    return this.createAuthTokens(user);
   }
 
   async logInGuest(user: User) {
     console.log('inside  auth.serve.ts -> login method ');
 
-    return this.createAuthPayload(user);
+    return this.createAuthTokens(user);
   }
 
-  createAuthPayload(user) {
+  async createAccessToken(user): Promise<AccessTokenPayload> {
     return {
-      access_token: this.jwtService.sign(
+      access_token: await this.jwtService.signAsync(
         {
           email: user.email,
           id: user.id,
         },
-        // {
-        //   expiresIn: '1h',
-        // },
+        {
+          expiresIn: '10s',
+        },
       ),
       email: user.email,
     };
+  }
+
+  async createRefreshToken(user): Promise<RefreshTokenPayload> {
+    return {
+      refresh_token: await this.jwtService.signAsync(
+        {
+          email: user.email,
+          id: user.id,
+        },
+        {
+          expiresIn: '1m',
+        },
+      ),
+      email: user.email,
+    };
+  }
+
+  async createAuthTokens(user: User): Promise<object> {
+    const accessToken = await this.createAccessToken(user);
+    const refreshToken = await this.createRefreshToken(user);
+
+    return { accessToken, refreshToken };
   }
 
   async validateUser(createUserDto: CreateUserDto) {

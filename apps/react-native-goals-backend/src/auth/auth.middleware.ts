@@ -17,27 +17,39 @@ export class AuthMiddleWare implements NestMiddleware {
     console.log({ requestHeaders: req.headers });
 
     const accessToken = req.headers?.authorization?.split(' ')[1];
-    console.log({ accessToken });
+    const refreshToken = req.headers.refreshToken;
+    console.log({ accessToken, refreshToken });
 
-    if (accessToken) {
-      console.log('inside if(accessToken){}');
-      try {
-        console.log('inside try{} catch() {}');
-
-        const decodedAccessToken = this.jwtService.verify(accessToken, {
-          ignoreExpiration: true,
-          complete: true,
-        });
-        console.log({ decodedAccessToken });
-        req['user'] = decodedAccessToken;
-        console.log("req['user'] following");
-        console.log(req['user']);
-        console.log({ requestBody: req.body });
-        console.log('middleware is ok');
-      } catch (error) {
-        res.status(401).json({ message: 'Unauthorized' });
-      }
+    if (req.body?.query?.includes('@registerMutation')) {
+      // Perform actions specific to the isolated mutation
+      console.log('Intercepted registrationMutation. No need for a token here');
+      next();
     }
-    next();
+
+    if (!accessToken || !refreshToken) {
+      res.sendStatus(401);
+      return;
+    }
+
+    try {
+      console.log(
+        'There is an access token, either the current one used by user or the refresh one used by the user.\n so we can go on and verify them',
+      );
+      console.log({ accessToken, refreshToken });
+
+      const decodedAccessToken = this.jwtService.verify(accessToken, {
+        complete: true,
+        ignoreExpiration: false,
+      });
+      req['user'] = decodedAccessToken;
+      console.log("req['user'] following");
+      console.log(req['user']);
+      console.log({ requestBody: req.body });
+      console.log('middleware is ok');
+      next();
+    } catch (error) {
+      console.log({ error });
+      res.sendStatus(401);
+    }
   }
 }

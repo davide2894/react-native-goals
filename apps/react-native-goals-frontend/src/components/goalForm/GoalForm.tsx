@@ -11,10 +11,10 @@ import {
 } from "react-native";
 import { useMutation } from "@apollo/client";
 import CREATE_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
-import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
 import { formStyles } from "../../style/formCommonStyles";
 import { lightGray } from "../../style/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
 
 function GoalForm(props: {
   onKeyboardShow: (evt: any) => void;

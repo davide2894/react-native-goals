@@ -1,9 +1,6 @@
 import Router from "./src/components/router/Router";
 import { AuthProvider } from "./src/components/authProvider/AuthProvider";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 export default function App() {
@@ -16,6 +13,9 @@ export default function App() {
   /**
    * TODO:
    * [] write polished readme with iphone usage mock screenshot
+   * [] refactor:
+   *  [] use log helper from nextjs app to log messages only in dev environment (__DEV__)
+   *  [] add loader when waiting for goals to arrive in page
    */
 
   if (__DEV__) {

@@ -29,6 +29,8 @@ export class UsersService {
     return await this.prismaService.user.create({ data: { email, password } });
   }
 
+  // # region - goals
+
   async getUserGoals(id: number) {
     console.log('user-service.ts --> getUserGoals method');
     console.log({

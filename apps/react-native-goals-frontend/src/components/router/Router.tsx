@@ -1,4 +1,10 @@
-import { ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  HttpLink,
+  ServerError,
+} from "@apollo/client";
 import AppStack from "../appStack/AppStack";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import AuthStack from "../authStack/AuthStack";
@@ -9,6 +15,11 @@ import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessTokenKey } from "../../constants";
 import { Text } from "react-native";
+import { onError } from "@apollo/client/link/error";
+import { cache } from "../../cache";
+import { AuthContextData } from "../../types";
+import { getRefreshTokenFromStorage } from "../../utils/refreshToken";
+import { useApolloClientSetup } from "../../hooks/useApolloClientSetup";
 
 function Router() {
   console.log("\n");
@@ -17,6 +28,7 @@ function Router() {
   console.log("------------------------------------------------------------");
   console.log("Router component rendered");
   const auth = useAuthContext();
+  const apolloClientSetup = useApolloClientSetup(auth);
 
   console.log({
     msg: "Router:::::access token state from context is",
@@ -29,9 +41,7 @@ function Router() {
     return <Text>Loading...</Text>;
   } else {
     return (
-      <ApolloProvider client={createApolloClient(auth)}>
-        {content}
-      </ApolloProvider>
+      <ApolloProvider client={apolloClientSetup}>{content}</ApolloProvider>
     );
   }
 }

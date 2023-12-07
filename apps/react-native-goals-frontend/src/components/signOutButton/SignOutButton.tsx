@@ -4,6 +4,7 @@ import { useAuthContext } from "../authProvider/AuthProvider";
 import { useApolloClient } from "@apollo/client";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { caribbeanGreen } from "../../style/colors";
+import { deleteRefreshTokenFromStorage } from "../../utils/refreshToken";
 
 function SignOutButton() {
   const auth = useAuthContext();
@@ -12,6 +13,7 @@ function SignOutButton() {
   async function handleSignOut() {
     console.log("singout button pressed");
     await deleteAccessTokenFromStorage();
+    await deleteRefreshTokenFromStorage();
     await apolloClient.resetStore();
     auth.updateAccessTokenInContext("");
   }

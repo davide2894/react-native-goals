@@ -16,7 +16,7 @@ import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMuta
 import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
 import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
 import { useDebouncedCallback } from "use-debounce";
-import { USER_GOALS_QUERY } from "../../hooks/useGetGoals";
+
 import { getAllGoalsInCache } from "../../cache";
 import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
 
@@ -28,6 +28,7 @@ import {
   white,
 } from "../../style/colors";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
+import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
 
 /**
  * TODO
