@@ -21,10 +21,10 @@ import { lightGray } from "../../style/colors";
 import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
 
 const REGISTER_USER = gql`
-  mutation ($email: String!, $password: String!) {
+  mutation Register($email: String!, $password: String!) {
     register(email: $email, password: $password) {
-      email
       access_token
+      refresh_token
     }
   }
 `;
@@ -54,7 +54,10 @@ export default function RegistrationForm() {
           await saveRefreshTokenToStorage(response.register?.refresh_token);
           await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
           isFirstTimeAccessReactiveVar(false);
-          auth.updateAccessTokenInContext(response.register?.access_token);
+          auth.updateAuthTokensInContext(
+            response.register?.access_token,
+            response.register?.refresh_token
+          );
         }
       }
     },

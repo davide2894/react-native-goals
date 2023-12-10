@@ -3,10 +3,16 @@ export type AuthData = {
   email: String;
 };
 
+export type AuthTokens = {
+  access_token: String;
+  refresh_token: String;
+};
+
 export type AuthContextData = {
-  accessTokenStateValue: string;
+  authTokensStateValues: AuthTokens;
   loading: boolean;
-  updateAccessTokenInContext: (access_token) => void;
+  updateAuthTokensInContext: (access_token, refresh_token) => void;
+  resetAuthTokensInContext: () => void;
   logOut: () => Promise<void>;
 };
 

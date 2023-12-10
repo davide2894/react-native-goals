@@ -10,6 +10,7 @@ import { saveAccessTokenToStorage } from "../../utils/accessToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
+import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
 
 function GuestAccessButton() {
   console.log("guest access component rendered");
@@ -31,9 +32,13 @@ function GuestAccessButton() {
           console.log({ registrationInfo: response });
           await apolloClient.resetStore();
           await saveAccessTokenToStorage(response.register.access_token);
+          await saveRefreshTokenToStorage(response.register.refresh_token);
           await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
           isFirstTimeAccessReactiveVar(false);
-          auth.updateAccessTokenInContext(response.register.access_token);
+          auth.updateAuthTokensInContext(
+            response.register.access_token,
+            response.register.refresh_token
+          );
         }
       }
     },

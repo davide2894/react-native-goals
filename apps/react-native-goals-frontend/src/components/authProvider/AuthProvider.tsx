@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { getAccessTokenFromStorage } from "../../utils/accessToken";
 import AuthContext from "../../contexts/authContext";
+import { getRefreshTokenFromStorage } from "../../utils/refreshToken";
 
 function AuthProvider({ children }) {
   console.log("\n");
@@ -8,7 +9,10 @@ function AuthProvider({ children }) {
   console.log("\n");
   console.log("------------------------------------------------------------");
   console.log("AuthProvider of context --> component rendered");
-  const [accessTokenStateValue, setAccessTokenStateValue] = useState("");
+  const [authTokenStateValues, setAuthTokenStateValues] = useState({
+    access_token: "",
+    refresh_token: "",
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,20 +21,26 @@ function AuthProvider({ children }) {
       console.log(
         "AuthProvider of context --> inside useEffect --> tryGetAccessToken() called"
       );
-      const access_token = await getAccessTokenFromStorage();
+      const accessTokenFromStorage = await getAccessTokenFromStorage();
+      const refreshTokenFromStorage = await getRefreshTokenFromStorage();
       console.log({
         msg: "retrieving access token",
-        accessToken: {
-          storage: access_token,
-          state: accessTokenStateValue,
+        authTokenValuesFromStorage: {
+          accessTokenFromStorage,
+          refreshTokenFromStorage,
+          accessTokenStateValue: authTokenStateValues,
         },
       });
-      if (access_token) {
+      if (accessTokenFromStorage) {
         console.log(
           "AuthProvider of context --> inside useEffect --> updating access token state with token in storage"
         );
       }
-      setAccessTokenStateValue(await getAccessTokenFromStorage());
+
+      setAuthTokenStateValues({
+        access_token: accessTokenFromStorage,
+        refresh_token: refreshTokenFromStorage,
+      });
     };
 
     try {
@@ -41,24 +51,47 @@ function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [accessTokenStateValue, setAccessTokenStateValue, setLoading]);
+  }, [
+    authTokenStateValues.access_token,
+    authTokenStateValues.refresh_token,
+    setAuthTokenStateValues,
+    setLoading,
+  ]);
 
-  function updateAccessTokenInContext(access_token: string) {
+  function updateAuthTokensInContext(accessTokenNewValue: string) {
     console.log("Auth provider: updating access token state");
-    setAccessTokenStateValue(access_token);
+    setAuthTokenStateValues({
+      ...authTokenStateValues,
+      access_token: accessTokenNewValue,
+    });
+  }
+
+  function resetAuthTokensInContext() {
+    console.log(
+      "AuthProvider ----> resetting both access and refresh token states"
+    );
+
+    setAuthTokenStateValues({
+      access_token: "",
+      refresh_token: "",
+    });
   }
 
   async function logOut() {
     console.log("AuthProvider.tsx ---> logout after pressing singout button");
-    setAccessTokenStateValue("");
+    setAuthTokenStateValues({
+      access_token: "",
+      refresh_token: "",
+    });
   }
 
   return (
     <AuthContext.Provider
       value={{
-        accessTokenStateValue,
+        authTokensStateValues: authTokenStateValues,
         loading,
-        updateAccessTokenInContext,
+        updateAuthTokensInContext,
+        resetAuthTokensInContext,
         logOut,
       }}>
       {children}
@@ -74,7 +107,7 @@ function useAuthContext() {
     console.log({
       msg: "retrieving access token",
       accessToken: {
-        state: context.accessTokenStateValue,
+        state: context.authTokensStateValues,
       },
     });
 

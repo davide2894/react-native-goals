@@ -52,7 +52,10 @@ export default function LoginForm() {
         await saveRefreshTokenToStorage(response.login?.refresh_token);
         await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
         isFirstTimeAccessReactiveVar(false);
-        auth.updateAccessTokenInContext(response.login?.access_token);
+        auth.updateAuthTokensInContext(
+          response.login?.access_token,
+          response.login?.refresh_token
+        );
       }
     },
     onError: (error) => {

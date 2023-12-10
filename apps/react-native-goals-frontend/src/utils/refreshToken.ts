@@ -10,5 +10,7 @@ export async function getRefreshTokenFromStorage() {
 }
 
 export async function deleteRefreshTokenFromStorage() {
+  console.log("accessToken.ts ---> deleteRefreshTokenFromStorage() called");
+
   await SecureStore.deleteItemAsync(refreshTokenKey);
 }

@@ -15,13 +15,13 @@ const createAuthLink = (auth: AuthContextData) =>
     console.log(
       "App component ---> authLink --> new ApolloLink --> this is the token from state, passed to the headers"
     );
-    console.log(auth.accessTokenStateValue);
+    console.log(auth.authTokensStateValues);
 
     operation.setContext(async ({ headers }) => ({
       headers: {
         ...headers,
-        authorization: auth.accessTokenStateValue
-          ? `Bearer ${auth.accessTokenStateValue}`
+        authorization: auth.authTokensStateValues
+          ? `Bearer ${auth.authTokensStateValues}`
           : "",
         refreshToken: await getRefreshTokenFromStorage(),
       },

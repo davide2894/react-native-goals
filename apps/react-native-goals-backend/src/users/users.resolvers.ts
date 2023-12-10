@@ -2,7 +2,7 @@ import { CreateUserDto } from './create-user.dto';
 import { Logger } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
-import { Goal } from 'src/graphql';
+import { AuthTokensPayload, Goal } from 'src/graphql';
 import { UsersService } from './users.service';
 
 @Resolver('User')
@@ -14,10 +14,10 @@ export class UserResolver {
 
   @Query(() => [Goal])
   async userGoals(@Context('req') req: any) {
-    console.log('inside user goals resolver');
+    console.log('inside user goals  resolver');
     console.log('user intercepted in request header');
     const goals = await this.usersService.getUserGoals(req?.user?.payload.id);
-    console.log('goals  that are going to be sent to the frontend');
+    console.log('goals that  are going to be sent to the frontend');
     console.log({ goals });
     return goals;
   }
@@ -32,7 +32,7 @@ export class UserResolver {
   async register(
     @Args('email') email: string,
     @Args('password') password: string,
-  ): Promise<object> {
+  ): Promise<AuthTokensPayload> {
     Logger.log('inside UserResolver -> register method');
     Logger.log({
       email,
@@ -59,20 +59,17 @@ export class UserResolver {
 
   @Mutation()
   async refreshTokens(@Context('req') req: any): Promise<object> {
+    console.log('inside refreshTokens resolver ');
     const user = await this.usersService.getUserById(req?.user?.payload.id);
     const authTokens = await this.authService.createAuthTokens(user);
-
+    console.log('new tokens');
+    console.log({ authTokens });
     return authTokens;
   }
 
   @Mutation()
-  async createAuthTokens(user) {
-    return await this.authService.createAuthTokens(user);
-  }
-
-  @Mutation()
   async incrementScore(@Context('req') req: any) {
-    console.log('users.resolvers.ts ---> incrementScore method');
+    console.log('users.resolvers.ts  --->  incrementScore method');
     console.log({ userFromReq: req?.user?.payload?.id });
     const user = await this.usersService.getUserById(req?.user?.payload.id);
     console.log({ requestVars: req.body.variables });

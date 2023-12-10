@@ -39,13 +39,13 @@ import { GraphQLError } from "graphql";
  */
 
 const REFRESH_TOKENS = gql`
-      mutation (access_token: String!, refresh_token: String!) {
-        refreshTokens(access_token: $access_token, refresh_token: $refresh_token) {
-          access_token,
-          refresh_token,
-        }
-      }
-    `;
+  mutation ($access_token: String!, $refresh_token: String!) {
+    refreshTokens(access_token: $access_token, refresh_token: $refresh_token) {
+      access_token
+      refresh_token
+    }
+  }
+`;
 
 export function useApolloClientSetup(
   auth: AuthContextData
@@ -60,7 +60,7 @@ export function useApolloClientSetup(
       await saveRefreshTokenToStorage(res.refresh_token);
     },
     onError: () => {
-      auth.updateAccessTokenInContext("");
+      auth.updateAuthTokensInContext("");
     },
   });
 
@@ -70,13 +70,13 @@ export function useApolloClientSetup(
       console.log(
         "App component ---> authLink --> new ApolloLink --> this is the token from state, passed to the headers"
       );
-      console.log(authParam.accessTokenStateValue);
+      console.log(authParam.authTokensStateValues);
 
       operation.setContext(async ({ headers }) => ({
         headers: {
           ...headers,
-          authorization: authParam.accessTokenStateValue
-            ? `Bearer ${authParam.accessTokenStateValue}`
+          authorization: authParam.authTokensStateValues
+            ? `Bearer ${authParam.authTokensStateValues}`
             : "",
           refreshToken: await getRefreshTokenFromStorage(),
         },

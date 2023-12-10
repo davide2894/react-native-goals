@@ -36,6 +36,7 @@ function GoalsScreen({ navigation }) {
   const apolloClient = useApolloClient();
 
   const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
+    fetchPolicy: "network-only",
     onCompleted: async (response) => {
       if (response && response.length) {
         console.log("goals fetched correctly");
@@ -53,7 +54,7 @@ function GoalsScreen({ navigation }) {
   );
   console.log({
     token: {
-      state: auth.accessTokenStateValue,
+      state: auth.authTokensStateValues,
     },
   });
   console.log({ data });

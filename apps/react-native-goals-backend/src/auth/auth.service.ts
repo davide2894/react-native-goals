@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { AccessTokenPayload, RefreshTokenPayload } from 'src/graphql';
+import { AuthTokensPayload } from 'src/graphql';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +31,10 @@ export class AuthService {
     if (!newUser) {
       throw new Error('Registration failed');
     } else {
-      return this.createAuthTokens(newUser);
+      console.log('creating auth tokens');
+      const authTokens = await this.createAuthTokens(newUser);
+      console.log({ authTokens });
+      return authTokens;
     }
   }
 
@@ -47,41 +50,36 @@ export class AuthService {
     return this.createAuthTokens(user);
   }
 
-  async createAccessToken(user): Promise<AccessTokenPayload> {
-    return {
-      access_token: await this.jwtService.signAsync(
-        {
-          email: user.email,
-          id: user.id,
-        },
-        {
-          expiresIn: '10s',
-        },
-      ),
-      email: user.email,
-    };
+  async createAccessToken(user): Promise<string> {
+    return await this.jwtService.signAsync(
+      {
+        email: user.email,
+        id: user.id,
+      },
+      {
+        expiresIn: '5s',
+      },
+    );
   }
 
-  async createRefreshToken(user): Promise<RefreshTokenPayload> {
-    return {
-      refresh_token: await this.jwtService.signAsync(
-        {
-          email: user.email,
-          id: user.id,
-        },
-        {
-          expiresIn: '1m',
-        },
-      ),
-      email: user.email,
-    };
+  async createRefreshToken(user): Promise<string> {
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        email: user.email,
+        id: user.id,
+      },
+      {
+        expiresIn: '60s',
+      },
+    );
+    return refreshToken;
   }
 
-  async createAuthTokens(user: User): Promise<object> {
+  async createAuthTokens(user: User): Promise<AuthTokensPayload> {
     const accessToken = await this.createAccessToken(user);
     const refreshToken = await this.createRefreshToken(user);
 
-    return { accessToken, refreshToken };
+    return { access_token: accessToken, refresh_token: refreshToken };
   }
 
   async validateUser(createUserDto: CreateUserDto) {

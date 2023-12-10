@@ -3,19 +3,17 @@ type User {
   email: String
 }
 
-type F {
-  access_token: String;
-  email: String;
+type AccessTokenPayload {
+  access_token: String
 }
 
 type RefreshTokenPayload {
-  refresh_token: String;
-  email: String;
+  refresh_token: String
 }
 
 type AuthTokensPayload {
-  accessTokenPayload: AccessTokenPayload;
-  refreshTokenPayload: RefreshTokenPayload;
+  access_token: String
+  refresh_token: String
 }
 
 type Goal {
@@ -41,10 +39,12 @@ type Query {
 }
 
 type Mutation {
-  register(email: String!, password: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
-  refreshTokens(access_token: String!, refresh_token: String!): AuthTokensPayload
-  continueAsGuest(email: String!, password: String!): AuthPayload
+  register(email: String!, password: String!): AuthTokensPayload
+  login(email: String!, password: String!): AuthTokensPayload
+  refreshTokens(
+    access_token: String!
+    refresh_token: String!
+  ): AuthTokensPayload
   incrementScore(inputStuff: GoalScoreInput): Goal
   decrementScore(inputStuff: GoalScoreInput): Goal
   resetScore(goalId: Int!): Goal
