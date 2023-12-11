@@ -57,7 +57,7 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '5s',
+        expiresIn: '5h',
       },
     );
   }
@@ -69,7 +69,7 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '60s',
+        expiresIn: '10h',
       },
     );
     return refreshToken;

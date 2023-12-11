@@ -44,7 +44,7 @@ function GuestAccessButton() {
     },
     onError: (error) => {
       console.log({
-        msg: "ooops! There was a login error",
+        msg: "ooops! There was a registration error",
         error,
       });
       displayGeneralErrorMessage();

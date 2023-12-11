@@ -106,6 +106,11 @@ export class UsersService {
     console.log(
       'user.service.ts ---> incrementGoalScore service method... -->',
     );
+    console.log({
+      userId,
+      goalId,
+      newCurrentScore,
+    });
     return await this.prismaService.goal.update({
       where: {
         userIdRef: userId,

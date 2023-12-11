@@ -34,7 +34,6 @@ input GoalScoreInput {
 
 # needs a resolver function that outputs a string https://www.apollographql.com/blog/backend/architecture/schema-first-vs-code-only-graphql/
 type Query {
-  hello: String!
   userGoals: [Goal]
 }
 

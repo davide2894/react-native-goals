@@ -30,7 +30,7 @@ import createApolloClient from "../../utils/apolloClient";
 import apolloClient from "../../utils/apolloClient";
 
 const REFRESH_TOKENS = gql`
-  mutation ($access_token: String!, $refresh_token: String!) {
+  mutation RefreshTokens($access_token: String!, $refresh_token: String!) {
     refreshTokens(access_token: $access_token, refresh_token: $refresh_token) {
       access_token
       refresh_token
@@ -62,21 +62,37 @@ function Router() {
 
   const refreshToken = async () => {
     try {
+      console.log(
+        "inside Observer -> refreshToken -> trycach -> sending refreshTokens mutation..."
+      );
+      console.log("checking tokens status before sending the mutation");
+      console.log({
+        access_token: auth.authTokensStateValues.access_token,
+        refresh_token: auth.authTokensStateValues.refresh_token,
+      });
       const response = await client.mutate({
         mutation: REFRESH_TOKENS,
         variables: {
-          access_token: await getAccessTokenFromStorage(),
-          refresh_token: await getRefreshTokenFromStorage(),
+          access_token: auth.authTokensStateValues.access_token,
+          refresh_token: auth.authTokensStateValues.refresh_token,
         },
       });
 
-      console.log({ clientMutateResponse: response });
-
       if (response) {
-        console.log({ responseAfterRefreshingToken: response });
-        await saveAccessTokenToStorage("response");
-        await saveRefreshTokenToStorage("response");
-        auth.updateAuthTokensInContext("access-token", "refresh-token");
+        console.log({
+          refreshedAT: response.data.refreshTokens.access_token,
+          refreshedRT: response.data.refreshTokens.refresh_token,
+        });
+        await saveAccessTokenToStorage(
+          response.data.refreshTokens.access_token
+        );
+        await saveRefreshTokenToStorage(
+          response.data.refreshTokens.refresh_token
+        );
+        auth.updateAuthTokensInContext(
+          response.data.refreshTokens.access_token,
+          response.data.refreshTokens.refresh_token
+        );
       }
     } catch (err) {
       console.log("both tokens are expired so we must log out user");
@@ -105,36 +121,28 @@ function Router() {
         refreshToken: auth.authTokensStateValues.refresh_token,
       },
     }));
-    console.log({ operationContext: operation.getContext() });
 
     return forward(operation);
   });
 
   const httpLink = new HttpLink({
-    uri: "https://b1a5-93-148-111-254.ngrok-free.app/graphql",
+    uri: "https://da54-93-149-132-59.ngrok-free.app/graphql",
   });
 
   const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
       console.log("\n\n\n");
       console.log("onError");
-      console.log("\n\n\n");
       console.log({ graphQLErrors });
       console.log({ networkError });
-      console.log({ operation });
-      console.log("\n\n\n");
-      console.log("\n\n\n");
-      console.log("\n\n\n");
-      console.log("\n\n\n");
+      console.log(operation.operationName);
+      console.log(operation.variables);
 
       if (networkError && networkError.message.includes("401")) {
         console.log({ networkError });
         console.log(networkError.name);
         console.log(networkError.message);
-        console.log({ operationName: operation.operationName });
-        if (operation.operationName === "Register") {
-          return;
-        }
+        console.log({ operation });
         console.log(
           "received 401 error, need to refresh token. Apporaching new Observable"
         );
@@ -142,13 +150,10 @@ function Router() {
           (observer) => {
             const tryRefreshToken = async () => {
               console.log("\n");
-              console.log("\n");
-              console.log("\n");
-              console.log("\n");
               console.log("inside the observer");
               try {
                 console.log(
-                  "sending refresh token   graphql operation to server..."
+                  "sending refresh token graphql operation to server..."
                 );
 
                 const token = await refreshToken();

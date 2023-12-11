@@ -44,9 +44,6 @@ function GoalsScreen({ navigation }) {
         console.log({ response: response.userGoals.length });
       }
     },
-    onError: async (error) => {
-      console.log(error);
-    },
   });
 
   console.log(

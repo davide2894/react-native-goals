@@ -43,8 +43,6 @@ export class Goal {
 }
 
 export abstract class IQuery {
-    abstract hello(): string | Promise<string>;
-
     abstract userGoals(): Nullable<Nullable<Goal>[]> | Promise<Nullable<Nullable<Goal>[]>>;
 }
 
