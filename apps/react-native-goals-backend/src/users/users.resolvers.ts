@@ -29,20 +29,17 @@ export class UserResolver {
     return await this.authService.register(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation()
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<object> {
-    console.log('resolvers.ts LOGIN');
+    console.log('resolvers .ts LOGIN ');
     const createUserDto: CreateUserDto = { email, password };
     const validatedUser = await this.authService.validateUser(createUserDto);
     if (validatedUser) {
       console.log({ validatedUser });
-      const loggedUser = await this.authService.login(validatedUser);
-      console.log({ loggedUser });
-      return loggedUser;
+      return await this.authService.login(validatedUser);
     }
   }
 

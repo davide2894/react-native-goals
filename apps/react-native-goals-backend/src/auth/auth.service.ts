@@ -40,14 +40,9 @@ export class AuthService {
 
   async login(user: User) {
     console.log('inside auth.serve.ts -> login method ');
-
-    return this.createAuthTokens(user);
-  }
-
-  async logInGuest(user: User) {
-    console.log('inside  auth.serve.ts -> login method ');
-
-    return this.createAuthTokens(user);
+    const authTokens = await this.createAuthTokens(user);
+    console.log({ authTokens });
+    return authTokens;
   }
 
   async createAccessToken(user): Promise<string> {
