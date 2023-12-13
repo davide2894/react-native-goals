@@ -103,6 +103,8 @@ export class UserResolver {
       req.body.variables.newCurrentScore,
     );
 
+    console.log({ updatedGoal });
+
     return updatedGoal;
   }
 

@@ -79,32 +79,13 @@ export class UsersService {
     });
   }
 
-  async incrementGoalScore(
-    userId: number,
-    goalId: number,
-    newCurrentScore: number,
-  ) {
-    console.log(
-      'user.service.ts ---> incrementGoalScore service method... -->',
-    );
-    return await this.prismaService.goal.update({
-      where: {
-        userIdRef: userId,
-        id: goalId,
-      },
-      data: {
-        actualScore: newCurrentScore,
-      },
-    });
-  }
-
   async updateGoalCurrentScore(
     userId: number,
     goalId: number,
     newCurrentScore: number,
   ) {
     console.log(
-      'user.service.ts ---> incrementGoalScore service method... -->',
+      'user.service.ts ---> updateGoalCurrentScore service method... -->',
     );
     console.log({
       userId,

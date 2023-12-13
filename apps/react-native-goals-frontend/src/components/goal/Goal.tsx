@@ -102,7 +102,10 @@ function Goal(props: { goal: GoalType }) {
       newCurrentScore: actualScoreState,
     },
     update: (cache, { data }) => {
-      const updatedGoal = data.incrementScore;
+      const updatedGoal = data.decrementScore;
+      console.log("Goal.tsx -> decrement score mutation response");
+      console.log(data);
+      console.log({ updatedGoal });
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       });
