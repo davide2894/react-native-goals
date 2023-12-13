@@ -7,6 +7,7 @@ import { UsersService } from './users.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/currentUser.decoratos';
+import { JwtRefreshAuthGuard } from 'src/guards/jwt-refresh-auth.guard';
 
 @Resolver('User')
 export class UserResolver {
@@ -43,7 +44,7 @@ export class UserResolver {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtRefreshAuthGuard)
   @Mutation()
   async refreshTokens(@CurrentUser() user: any): Promise<object> {
     console.log('inside refreshTokens resolver  ');

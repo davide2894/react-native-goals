@@ -36,7 +36,6 @@ function GoalsScreen({ navigation }) {
   const apolloClient = useApolloClient();
 
   const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
-    fetchPolicy: "network-only",
     onCompleted: async (response) => {
       if (response && response.length) {
         console.log("goals fetched correctly");

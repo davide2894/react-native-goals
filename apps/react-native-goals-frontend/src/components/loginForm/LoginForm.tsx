@@ -48,7 +48,7 @@ export default function LoginForm() {
       console.log({ loginResponse: response });
       if (response.login) {
         console.log({ loginResponse: response });
-        await apolloClient.resetStore();
+        await apolloClient.clearStore();
         console.log({
           at: response.login.access_token,
           rt: response.login.refresh_token,

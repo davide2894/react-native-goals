@@ -30,7 +30,7 @@ function GuestAccessButton() {
         if (response.register) {
           console.log("successfully registered");
           console.log({ registrationInfo: response });
-          await apolloClient.resetStore();
+          await apolloClient.clearStore();
           await saveAccessTokenToStorage(response.register.access_token);
           await saveRefreshTokenToStorage(response.register.refresh_token);
           await AsyncStorage.setItem(isFirstTimeAccessKey, "false");

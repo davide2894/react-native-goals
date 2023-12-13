@@ -12,7 +12,7 @@ import {
 import AppStack from "../appStack/AppStack";
 import { useAuthContext } from "../authProvider/AuthProvider";
 import AuthStack from "../authStack/AuthStack";
-import { Text } from "react-native";
+import { Alert, Text } from "react-native";
 import { onError } from "@apollo/client/link/error";
 import { cache } from "../../cache";
 import {
@@ -95,12 +95,13 @@ function Router() {
         );
       }
     } catch (err) {
-      console.log("both tokens are expired so we must log out user");
+      console.log("one or both tokens are expired so we must log out user");
       console.log("going to call auth.resetAuthTokensInContext()");
       console.log({ err });
+      Alert.alert("User tokens expired. Please login again :/");
       await deleteAccessTokenFromStorage();
       await deleteRefreshTokenFromStorage();
-      await client.resetStore();
+      await client.clearStore();
       auth.resetAuthTokensInContext();
     }
   };
@@ -135,45 +136,52 @@ function Router() {
       console.log("onError");
       console.log({ graphQLErrors });
       console.log({ networkError });
-      console.log(operation.operationName);
-      console.log(operation.variables);
+      console.log({ operationName: operation.operationName });
+      console.log({ operationVariables: operation.variables });
+
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          switch (err.extensions.code) {
+            case "UNAUTHENTICATED":
+              // ignore 401 error for a refresh request
+              if (operation.operationName === "RefreshTokens") return;
+
+              const observable = new Observable<
+                FetchResult<Record<string, any>>
+              >((observer) => {
+                const tryRefreshToken = async () => {
+                  console.log("\n");
+                  console.log("inside the observer");
+                  try {
+                    console.log(
+                      "sending refresh token graphql operation to server..."
+                    );
+
+                    const token = await refreshToken();
+                    console.log({ token });
+                    // Retry the failed request
+                    const subscriber = {
+                      next: observer.next.bind(observer),
+                      error: observer.error.bind(observer),
+                      complete: observer.complete.bind(observer),
+                    };
+
+                    forward(operation).subscribe(subscriber);
+                  } catch (err) {
+                    observer.error(err);
+                  }
+                };
+                tryRefreshToken();
+              });
+              return observable;
+          }
+        }
+      }
 
       if (networkError && networkError.message.includes("401")) {
         console.log({ networkError });
-        console.log(networkError.name);
-        console.log(networkError.message);
-        console.log({ operation });
-        console.log(
-          "received 401 error, need to refresh token. Apporaching new Observable"
-        );
-        const observable = new Observable<FetchResult<Record<string, any>>>(
-          (observer) => {
-            const tryRefreshToken = async () => {
-              console.log("\n");
-              console.log("inside the observer");
-              try {
-                console.log(
-                  "sending refresh token graphql operation to server..."
-                );
-
-                const token = await refreshToken();
-                console.log({ token });
-                // Retry the failed request
-                const subscriber = {
-                  next: observer.next.bind(observer),
-                  error: observer.error.bind(observer),
-                  complete: observer.complete.bind(observer),
-                };
-
-                forward(operation).subscribe(subscriber);
-              } catch (err) {
-                observer.error(err);
-              }
-            };
-            tryRefreshToken();
-          }
-        );
-        return observable;
+        console.log({ networkErrName: networkError.name });
+        console.log({ networkErrMessage: networkError.message });
       }
     }
   );

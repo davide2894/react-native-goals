@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    console.log('inside auth.serve.ts -> login method ');
+    console.log('inside auth.serve.ts ->  login method ');
     const authTokens = await this.createAuthTokens(user);
     console.log({ authTokens });
     return authTokens;
@@ -52,7 +52,8 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '5h',
+        expiresIn: '5s',
+        secret: process.env.ACCESS_TOKEN_SECRET,
       },
     );
   }
@@ -64,7 +65,8 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '10h',
+        expiresIn: '30s',
+        secret: process.env.REFRESH_TOKEN_SECRET,
       },
     );
     return refreshToken;

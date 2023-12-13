@@ -13,7 +13,7 @@ async function useOnRegistrationEndOperations(
 ) {
   console.log("successfully registered");
   console.log({ registrationInfo: graphQLOperationResponse });
-  await apolloClient.resetStore();
+  await apolloClient.clearStore();
   await saveAccessTokenToStorage(
     graphQLOperationResponse.register.access_token
   );
