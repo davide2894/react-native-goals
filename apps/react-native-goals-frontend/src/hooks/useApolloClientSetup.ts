@@ -19,25 +19,6 @@ import {
 import { saveAccessTokenToStorage } from "../utils/accessToken";
 import { GraphQLError } from "graphql";
 
-/**
- * TODO TEST:
- * [] login with valid access token
- *  [] access token is given
- *  [] refresh token is given
- * [] register
- *  [] access token is given
- *  [] refresh token is given
- * [] request with valud access token
- *  [] response normally
- * [] request with INVALID access token AND valid refresh token
- *  [] refresh access token -> which means create a new access token
- *  [] give back new access token
- *  [] retry request
- * [] request with INVALID access token AND INVALID refresh token
- *  [] give error 401
- *  [] start re-login process (set auth.updateAccessTokenState(""))
- */
-
 const REFRESH_TOKENS = gql`
   mutation ($access_token: String!, $refresh_token: String!) {
     refreshTokens(access_token: $access_token, refresh_token: $refresh_token) {

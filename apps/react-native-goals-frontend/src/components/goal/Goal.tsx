@@ -48,9 +48,9 @@ import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQue
     [x] should i really use another type of storage that's not async storage for jwt?
     [] set expiration to 1h and fix the expiration issue
         ---> [x] bug: fix user can register but gets cached goals from same old user (the one with a lot of goals)
-        ---> [] login doesn't work (see how to wrap it in auth guard if necessary)
-        [] add jwtAuthWithRefresh
-        [] test error cases
+        ---> [x] login doesn't work (see how to wrap it in auth guard if necessary)
+        [x] add jwtAuthWithRefresh
+        [x] test error cases
  * [] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
  * [] cover project with unit tests
  * */
