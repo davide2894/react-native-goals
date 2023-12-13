@@ -137,7 +137,8 @@ function Goal(props: { goal: GoalType }) {
       goalId: goal.id,
     },
     update: (cache, { data }) => {
-      const updatedGoal = data.incrementScore;
+      console.log(data);
+      const updatedGoal = data.resetScore;
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       });
