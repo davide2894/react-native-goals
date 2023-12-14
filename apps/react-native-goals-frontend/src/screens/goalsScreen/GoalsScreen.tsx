@@ -8,32 +8,35 @@ import {
 } from "react-native";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
-import { ServerError, useApolloClient, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import AddGoalButton from "../../../addGoalButton/AddGoalButton";
-import CloseButton from "../../components/closeModalButton/CloseButton";
 import GoalForm from "../../components/goalForm/GoalForm";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
-import BottomSheet from "../../components/bottomSheet/BottomSheet";
-import { deleteAccessTokenFromStorage } from "../../utils/accessToken";
-import apolloClient from "../../utils/apolloClient";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-const bottomSheetHeight = 400;
-
-function GoalsScreen({ navigation }) {
+function GoalsScreen() {
   console.log("\n");
   console.log("\n");
   console.log("\n");
   console.log("------------------------------------------------------------");
   console.log("GoalsScreen component rendered");
   console.log("GoalsScreen component --> retrieving auth context....");
-  const [isVisible, setIsVisible] = useState(false);
-  const { height } = useWindowDimensions();
-  const translateY = useRef(new Animated.Value(height)).current;
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const auth = useAuthContext();
-  const apolloClient = useApolloClient();
+
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
 
   const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
     onCompleted: async (response) => {
@@ -71,66 +74,10 @@ function GoalsScreen({ navigation }) {
     return <Goal key={item.id} goal={item} />;
   }
 
-  function openBottomSheet() {
-    console.log("---------------------");
-    console.log("openBottomSheet");
-    console.log({ translateY });
-    console.log({ height });
-    setIsVisible(true);
-    Animated.timing(translateY, {
-      toValue: height - bottomSheetHeight,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function closeBottomSheet() {
-    console.log("---------------------");
-    console.log("closeBottomSheet");
-    console.log({ translateY });
-    console.log({ height });
-    console.log({ heightAfterAnimation: height });
-
-    Animated.timing(translateY, {
-      toValue: height,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsVisible(false);
-    });
-  }
-
-  function onKeyboardShow(event) {
-    const keyboardHeight = event.endCoordinates.height;
-    console.log("---------------------");
-    console.log("onKeyboardDidShow");
-    console.log({ keyboardHeight });
-    console.log({ height });
-    console.log({ translateY });
-    console.log({
-      heightAfterAnimation: height - keyboardHeight - bottomSheetHeight,
-    });
-    Animated.timing(translateY, {
-      toValue: height - keyboardHeight - bottomSheetHeight,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function onKeyboardHide() {
-    console.log("---------------------");
-    console.log("onKeyboardDidShow ");
-    console.log({ height });
-    console.log({ translateY });
-    console.log({ heightAfterAnimation: height });
-
-    Animated.timing(translateY, {
-      toValue: height - bottomSheetHeight,
-      useNativeDriver: true,
-    }).start();
-  }
-
   return (
-    <View style={{ maxHeight: height, position: "relative" }}>
-      <View style={{ ...styles.container, ...screenCommonStyles.layout }}>
+    <View style={styles.container}>
+      <View
+        style={{ ...styles.contentContainer, ...screenCommonStyles.layout }}>
         <View style={styles.header}>
           <Text style={styles.h1}>Goals</Text>
           <SignOutButton />
@@ -141,22 +88,30 @@ function GoalsScreen({ navigation }) {
               data={data.userGoals}
               keyExtractor={(item) => item.id.toString()}
               renderItem={handleRenderItem}></FlatList>
-            <AddGoalButton onPressCallback={openBottomSheet} />
           </>
         )}
-        {isVisible && (
+        <AddGoalButton onPressCallback={() => setIsBottomSheetVisible(true)} />
+        {isBottomSheetVisible && (
           <BottomSheet
-            translateY={translateY}
-            bottomSheetHeight={bottomSheetHeight}>
-            <CloseButton
-              onCloseButtonPress={closeBottomSheet}
-              a11yText={"Close form and bottom sheet"}
-            />
-            <GoalForm
-              onKeyboardShow={onKeyboardShow}
-              onKeyboardHide={onKeyboardHide}
-              closeBottomSheet={closeBottomSheet}
-            />
+            style={styles.bottomSheet}
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            enablePanDownToClose={true}
+            onClose={() => setIsBottomSheetVisible(false)}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                position: "relative",
+                padding: 10,
+              }}>
+              <GoalForm
+                closeBottomSheet={() => setIsBottomSheetVisible(false)}
+              />
+            </View>
           </BottomSheet>
         )}
       </View>
@@ -169,7 +124,15 @@ export default GoalsScreen;
 const styles = StyleSheet.create({
   container: {
     display: "flex",
+    borderWidth: 2,
+    height: "100%",
+  },
+  contentContainer: {
+    display: "flex",
     flexDirection: "column",
+    justifyContent: "space-around",
+    flex: 1,
+    paddingBottom: 60,
   },
   header: {
     display: "flex",
@@ -182,5 +145,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     marginBottom: 30,
     fontSize: 30,
+  },
+  bottomSheet: {
+    padding: 10,
+    position: "relative",
   },
 });
