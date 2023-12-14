@@ -46,7 +46,7 @@ import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQue
     [x] guest -> "Beware! This is a temporary account: when you logout all data will be lost. Be sure to register properly if you want to keep track of your goals consistently"
  * jwt: 
     [x] should i really use another type of storage that's not async storage for jwt?
-    [] set expiration to 1h and fix the expiration issue
+    [x] set expiration to 1h and fix the expiration issue
         ---> [x] bug: fix user can register but gets cached goals from same old user (the one with a lot of goals)
         ---> [x] login doesn't work (see how to wrap it in auth guard if necessary)
         [x] add jwtAuthWithRefresh
