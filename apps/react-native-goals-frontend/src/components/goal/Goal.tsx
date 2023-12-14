@@ -51,7 +51,7 @@ import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQue
         ---> [x] login doesn't work (see how to wrap it in auth guard if necessary)
         [x] add jwtAuthWithRefresh
         [x] test error cases
- * [] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
+ * [x] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
  * [] cover project with unit tests
  * */
 
