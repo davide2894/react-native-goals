@@ -8,12 +8,14 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/currentUser.decoratos';
 import { JwtRefreshAuthGuard } from 'src/guards/jwt-refresh-auth.guard';
+import { GoalsService } from 'src/goals/goals.service';
 
 @Resolver('User')
 export class UserResolver {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    private goalsService: GoalsService,
   ) {}
 
   @Mutation()
@@ -62,7 +64,7 @@ export class UserResolver {
     console.log('inside user goals  resolver -> userGoals()');
     console.log('user intercepted in request header');
     console.log(user);
-    const goals = await this.usersService.getUserGoals(user?.payload?.id);
+    const goals = await this.goalsService.getUserGoals(user?.payload?.id);
     console.log('goals that  are going to be sent to the frontend');
     console.log({ goals });
     return goals;
@@ -82,7 +84,7 @@ export class UserResolver {
     console.log({
       reqBodyVarNewCurrentScored: req.body.variables.newCurrentScore,
     });
-    const updatedGoal = await this.usersService.updateGoalCurrentScore(
+    const updatedGoal = await this.goalsService.updateGoalCurrentScore(
       userInDb.id,
       req.body.variables.id,
       req.body.variables.newCurrentScore,
@@ -98,7 +100,7 @@ export class UserResolver {
   async decrementScore(@CurrentUser() user: any, @Context('req') req: any) {
     console.log('users.resolvers.ts ---> decrementScore method');
     const userInDb = await this.usersService.getUserById(user?.payload.id);
-    const updatedGoal = await this.usersService.updateGoalCurrentScore(
+    const updatedGoal = await this.goalsService.updateGoalCurrentScore(
       userInDb.id,
       req.body.variables.id,
       req.body.variables.newCurrentScore,
@@ -114,7 +116,7 @@ export class UserResolver {
   async resetScore(@CurrentUser() user: any, @Context('req') req: any) {
     console.log('users.resolvers.ts ---> resetScore method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
-    const updatedGoal = await this.usersService.resetScore(
+    const updatedGoal = await this.goalsService.resetScore(
       userInDb.id,
       req.body.variables.goalId,
     );
@@ -127,7 +129,7 @@ export class UserResolver {
   async deleteGoal(@CurrentUser() user: any, @Context('req') req: any) {
     console.log('users.resolvers.ts ---> deleteGoal method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
-    const updatedGoal = await this.usersService.deleteGoal(
+    const updatedGoal = await this.goalsService.deleteGoal(
       userInDb.id,
       req.body.variables.goalId,
     );
@@ -142,7 +144,7 @@ export class UserResolver {
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const goalTitle = req.body.variables.goalTitle;
     const maxScore = req.body.variables.maxScore;
-    return await this.usersService.createGoal(userInDb.id, goalTitle, maxScore);
+    return await this.goalsService.createGoal(userInDb.id, goalTitle, maxScore);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -152,7 +154,7 @@ export class UserResolver {
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const goalId = req.body.variables.goalId;
     const goalTitle = req.body.variables.goalTitle;
-    return await this.usersService.editGoalTitle(
+    return await this.goalsService.editGoalTitle(
       goalId,
       userInDb.id,
       goalTitle,
