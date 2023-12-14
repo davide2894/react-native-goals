@@ -52,7 +52,7 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '5s',
+        expiresIn: '30m',
         secret: process.env.ACCESS_TOKEN_SECRET,
       },
     );
@@ -65,7 +65,7 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '30s',
+        expiresIn: '24h',
         secret: process.env.REFRESH_TOKEN_SECRET,
       },
     );
