@@ -12,10 +12,13 @@ export default function App() {
 
   /**
    * TODO:
-   * [] write polished readme with iphone usage mock screenshot
    * [] refactor:
-   *  [] use log helper from nextjs app to log messages only in dev environment (__DEV__)
+   *  [x] use log helper from nextjs app to log messages only in dev environment (__DEV__)
    *  [] add loader when waiting for goals to arrive in page
+   *  [] modularize more the backend services file for user, goal, token
+   * [] ui
+   *  [] improve home animation screen
+   * [] write polished readme with iphone usage mock screenshot
    */
 
   if (__DEV__) {
