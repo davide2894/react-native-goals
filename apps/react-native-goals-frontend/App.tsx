@@ -16,7 +16,7 @@ export default function App() {
    * [] refactor:
    *  [x] use log helper from nextjs app to log messages only in dev environment (__DEV__)
    *  [x] modularize more the backend services file for user, goal, token
-   *  [] add loader when waiting for goals to arrive in page
+   *  [x] add loader when waiting for goals to arrive in page
    * [] ui
    *  [] improve home animation screen
    * [] write polished readme with iphone usage mock screenshot
