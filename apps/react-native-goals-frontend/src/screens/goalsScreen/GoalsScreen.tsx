@@ -1,10 +1,9 @@
 import {
   StyleSheet,
-  Animated,
   FlatList,
   Text,
   View,
-  useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
@@ -16,6 +15,7 @@ import GoalForm from "../../components/goalForm/GoalForm";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { caribbeanGreen, gray } from "../../style/colors";
 
 function GoalsScreen() {
   console.log("\n");
@@ -82,6 +82,7 @@ function GoalsScreen() {
           <Text style={styles.h1}>Goals</Text>
           <SignOutButton />
         </View>
+        {loading && <ActivityIndicator size="large" color={gray} />}
         {!loading && !error && (
           <>
             <FlatList
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     flex: 1,
     paddingBottom: 60,
   },
