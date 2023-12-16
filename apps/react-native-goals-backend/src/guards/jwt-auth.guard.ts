@@ -14,9 +14,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     console.log('JwtAuthGuard');
     console.log(' async canActivate(context: ExecutionContext)');
     const parentCanActivate = (await super.canActivate(context)) as boolean;
-    // const ctx = GqlExecutionContext.create(context);
-    // const req = ctx.getContext().req;
-    // console.log('graphql guard user', req && req.user);
     console.log({ parentCanActivate });
     return parentCanActivate;
   }

@@ -1,5 +1,4 @@
 import { CreateUserDto } from './create-user.dto';
-import { Logger } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthTokensPayload, Goal } from 'src/graphql';
@@ -23,8 +22,8 @@ export class UserResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<AuthTokensPayload> {
-    Logger.log('inside UserResolver -> register method ');
-    Logger.log({
+    console.log('inside UserResolver -> register method ');
+    console.log({
       email,
       password,
     });

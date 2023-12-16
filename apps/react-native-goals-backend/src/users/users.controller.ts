@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -27,7 +26,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    Logger.log('test');
+    console.log('test');
     this.usersService.create(createUserDto);
   }
 }

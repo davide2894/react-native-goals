@@ -27,13 +27,8 @@ function GoalsScreen() {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const auth = useAuthContext();
 
-  // ref
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // variables
   const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);

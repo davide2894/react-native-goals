@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
@@ -18,8 +18,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    Logger.log('jwt.refresh-strategy.ts');
-    Logger.log({ payload });
+    console.log('jwt.refresh-strategy.ts');
+    console.log({ payload });
     return { payload };
   }
 }

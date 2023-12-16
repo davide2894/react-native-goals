@@ -30,10 +30,9 @@ export default CloseButton;
 const styles = StyleSheet.create({
   button: {
     position: "absolute",
-    top: 0,
+    top: 8,
     right: 16,
     padding: 10,
     borderRadius: 100,
-    borderWidth: 2,
   },
 });

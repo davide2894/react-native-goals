@@ -1,6 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
@@ -14,9 +14,9 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    Logger.log('inside AuthService -> register method');
-    Logger.log({ createUserDto });
-    Logger.log({ createUserDtoPassword: createUserDto.password });
+    console.log('inside AuthService -> register method');
+    console.log({ createUserDto });
+    console.log({ createUserDtoPassword: createUserDto.password });
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const newUser = (await this.prismaService.user.create({
@@ -26,7 +26,7 @@ export class AuthService {
       },
     })) as User;
 
-    Logger.log({ newUser });
+    console.log({ newUser });
 
     if (!newUser) {
       throw new Error('Registration failed');
