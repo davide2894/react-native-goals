@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './create-user.dto';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -54,8 +54,6 @@ describe('UsersService', () => {
       console.log({ queryResult });
       expect(queryResult).toBeDefined();
       expect(queryResult).toHaveProperty('email');
-      // expect(queryResult.email).toEqual(email);
-      // expect(queryResult.id).toEqual(id);
     });
   });
 });
