@@ -17,17 +17,12 @@ import { onError } from "@apollo/client/link/error";
 import { cache } from "../../cache";
 import {
   deleteRefreshTokenFromStorage,
-  getRefreshTokenFromStorage,
   saveRefreshTokenToStorage,
 } from "../../utils/refreshToken";
-import { GraphQLError } from "graphql";
 import {
   deleteAccessTokenFromStorage,
-  getAccessTokenFromStorage,
   saveAccessTokenToStorage,
 } from "../../utils/accessToken";
-import createApolloClient from "../../utils/apolloClient";
-import apolloClient from "../../utils/apolloClient";
 
 const REFRESH_TOKENS = gql`
   mutation RefreshTokens($access_token: String!, $refresh_token: String!) {
@@ -127,7 +122,7 @@ function Router() {
   });
 
   const httpLink = new HttpLink({
-    uri: "https://da54-93-149-132-59.ngrok-free.app/graphql",
+    uri: "https://5081-93-149-133-100.ngrok-free.app/graphql",
   });
 
   const errorLink = onError(
