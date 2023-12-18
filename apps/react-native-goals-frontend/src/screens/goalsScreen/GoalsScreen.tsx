@@ -10,7 +10,7 @@ import Goal from "../../components/goal/Goal";
 import { useQuery } from "@apollo/client";
 import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
 import { useState, useRef, useCallback, useMemo } from "react";
-import AddGoalButton from "../../../addGoalButton/AddGoalButton";
+import AddGoalButton from "../../components/addGoalButton/AddGoalButton";
 import GoalForm from "../../components/goalForm/GoalForm";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
