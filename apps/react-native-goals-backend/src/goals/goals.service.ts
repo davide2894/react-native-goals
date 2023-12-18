@@ -45,15 +45,6 @@ export class GoalsService {
     return goal;
   }
 
-  async findUserGoal(userId: number, goalId: number) {
-    return await this.prismaService.goal.findUnique({
-      where: {
-        userIdRef: userId,
-        id: goalId,
-      },
-    });
-  }
-
   async updateGoalCurrentScore(
     userId: number,
     goalId: number,
