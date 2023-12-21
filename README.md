@@ -1,81 +1,55 @@
-# Turborepo starter
+Mobile app of [React Daily Goal Tracker](https://github.com/davide2894/react-daily-goal-tracker), a web app I build previously to track weekly goals on a daily basis.
 
-This is an official starter Turborepo.
+## User journey
 
-## Using this example
+This is a weekly goal tracking app, which means its purpose is to set weekly goals to meet each day.
 
-Run the following command:
+When the app is opened, the user can access the Goals screen by either using a guest account, registering a new account or loggin in his/her own account.
 
-```sh
-npx create-turbo@latest
-```
+If a page is refreshed or reloaded, the account and the goal are persisted, which means that the user session is kept, hence the account keeps being logged in.
 
-## What's inside?
+### Refresh token
 
-This Turborepo includes the following packages/apps:
+This app uses the [Refresh token with rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation#:~:text=Refresh%20token%20rotation%20is%20a,shorter%2Dlived%20access%20tokens%20expire.) security strategy
 
-### Apps and Packages
+## Note
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+This app uses [Expo](https://docs.expo.dev/) - a framework to develop React Native apps easily withouth worrying about all the setup needed to start working on a native mobile app - and [Expo Go](https://docs.expo.dev/get-started/expo-go/), a sandbox that let you run and test your locally developed app on a physical device (IOS or Android) without needing to publish your app on the respective app store
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Technologies being used
 
-### Utilities
+- [React Native](https://reactnative.dev/)
+- [Apollo Client](https://www.apollographql.com/docs/react/)
+- [GraphQL](https://graphql.org/)
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
+- [Nest.js](https://docs.nestjs.com/)
+- [Prisma.io](https://www.prisma.io/)
+- [Sqlite](https://www.sqlite.org/index.html)
+- [Typescript](https://www.typescriptlang.org/)
+- [Turborepo](https://turbo.build/repo)
+- [Expo](https://docs.expo.dev/)
+- [Expo Go](https://docs.expo.dev/get-started/expo-go/)
 
-This Turborepo has some additional tools already setup for you:
+## Installing
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Run 'npm i'
 
-### Build
+## Executing program
 
-To build all apps and packages, run the following command:
+To run locally this app you need to follow these steps
 
-```
-cd my-turborepo
-pnpm build
-```
+### Download the Expo Go app
 
-### Develop
+Download Expo Go from the app store of your mobile device (App Store for IOS and Play Store for Android)
 
-To develop all apps and packages, run the following command:
+### Run the backend locally
 
-```
-cd my-turborepo
-pnpm dev
-```
+- Open a terminal in the project root folder
+- Run 'cd apps/react-native-goals-backend'
+- Run 'npm run start:watch'
 
-### Remote Caching
+### Run the frontend locally
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+- Open a terminal in the project root folder
+- Run 'cd apps/react-native-goals-frontend'
+- Run 'npm run start' (you may need to run expo in tunnel mode in some cases)
