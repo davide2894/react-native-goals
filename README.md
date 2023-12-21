@@ -32,7 +32,7 @@ This app uses [Expo](https://docs.expo.dev/) - a framework to develop React Nati
 
 ## Installing
 
-Run 'npm i'
+Run `npm i`
 
 ## Executing program
 
@@ -42,14 +42,25 @@ To run locally this app you need to follow these steps
 
 Download Expo Go from the app store of your mobile device (App Store for IOS and Play Store for Android)
 
+### Expose the local server with Ngrok
+
+- Download and intstall [Ngrok](https://ngrok.com/download), a software needed to expose the local backend server to the internet, so that it is accessible from the Expo Go app
+- Open a terminal
+- Run the command `ngrok http 3000`
+- Once Ngrok generates the public url, open the `Router.tsx` and replace the url inside the httpLink variable, as shown below
+
+`const httpLink = new HttpLink({
+uri: <replace link here>,
+});`
+
 ### Run the backend locally
 
 - Open a terminal in the project root folder
-- Run 'cd apps/react-native-goals-backend'
-- Run 'npm run start:watch'
+- Run `cd apps/react-native-goals-backend`
+- Run `npm run start:watch`
 
 ### Run the frontend locally
 
 - Open a terminal in the project root folder
-- Run 'cd apps/react-native-goals-frontend'
-- Run 'npm run start' (you may need to run expo in tunnel mode in some cases)
+- Run `cd apps/react-native-goals-frontend`
+- Run `npm run start` (you may need to run expo in tunnel mode in some cases)
