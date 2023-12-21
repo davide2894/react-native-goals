@@ -8,14 +8,14 @@ import {
 import { useAuthContext } from "../../components/authProvider/AuthProvider";
 import Goal from "../../components/goal/Goal";
 import { useQuery } from "@apollo/client";
-import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
 import { useState, useRef, useCallback, useMemo } from "react";
 import AddGoalButton from "../../components/addGoalButton/AddGoalButton";
 import GoalForm from "../../components/goalForm/GoalForm";
 import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { caribbeanGreen, gray } from "../../style/colors";
+import { gray } from "../../style/colors";
 
 function GoalsScreen() {
   console.log("\n");

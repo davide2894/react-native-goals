@@ -1,8 +1,6 @@
 import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Modal } from "react-native";
 import { useState } from "react";
-import GoalForm from "../goalForm/GoalForm";
-// import { caribbeanGreen } from "../../style/globals/color";
 
 function NewGoalButton() {
   const [showNewGoalForm, setShowNewGoalForm] = useState(false);

@@ -10,11 +10,11 @@ import {
   Platform,
 } from "react-native";
 import { useMutation } from "@apollo/client";
-import CREATE_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
+import CREATE_GOAL_MUTATION from "../../graphql/operations/mutations/addGoalMutation";
 import { formStyles } from "../../style/formCommonStyles";
 import { lightGray } from "../../style/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 function GoalForm(props: {

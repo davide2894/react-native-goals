@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import trimString from "../../utils/trimString";
 import { useMutation } from "@apollo/client";
-import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
-import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
-import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
-import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
+import INCREMENT_SCORE_MUTATION from "../../graphql/operations/mutations/incrementScoreMutation";
+import DECREMENT_SCORE_MUTATION from "../../graphql/operations/mutations/decrementScoreMutation";
+import DELETE_GOAL_MUTATION from "../../graphql/operations/mutations/deleteGoalMutation";
+import RESET_SCORE_MUTATION from "../../graphql/operations/mutations/resetScoreMutation";
 import { useDebouncedCallback } from "use-debounce";
 
 import { getAllGoalsInCache } from "../../cache";
-import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
+import EDIT_GOAL_TITLE_MUTATION from "../../graphql/operations/mutations/editGoalTitleMutation";
 
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -28,7 +28,7 @@ import {
   white,
 } from "../../style/colors";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
-import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
 
 /**
  * TODO
