@@ -1,3 +1,13 @@
+# React Native Goals
+
+<table>
+  <tr>
+    <td><img src="assets/preview_1.png" width=326 height=706></td>
+    <td><img src="assets/preview_2.png" width=326 height=706></td>
+    <td><img src="assets/preview_4.png" width=326 height=706></td>
+  </tr>
+ </table>
+
 Mobile app of [React Daily Goal Tracker](https://github.com/davide2894/react-daily-goal-tracker), a web app I build previously to track weekly goals on a daily basis.
 
 ## User journey
@@ -32,7 +42,7 @@ This app uses [Expo](https://docs.expo.dev/) - a framework to develop React Nati
 
 ## Installing
 
-Run `npm i`
+Run the command `npm i` at the root folder level
 
 ## Executing program
 
@@ -57,10 +67,11 @@ uri: <replace link here>,
 
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-backend`
+- Run `npm run prisma:generateClient`
 - Run `npm run start:watch`
 
 ### Run the frontend locally
 
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-frontend`
-- Run `npm run start` (you may need to run expo in tunnel mode in some cases)
+- Run `npm run start` (you may need to run expo in tunnel mode in some cases, with the `npm run start --tunnel` command)
