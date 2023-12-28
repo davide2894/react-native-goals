@@ -20,7 +20,7 @@ const CloseButton = (props: {
       style={styles.button}
       underlayColor={caribbeanGreen}
       onPress={props.onCloseButtonPress}>
-      <AntDesign name="close" size={32} color="black" />
+      <AntDesign name="close" size={24} color="black" />
     </TouchableHighlight>
   );
 };
@@ -30,7 +30,7 @@ export default CloseButton;
 const styles = StyleSheet.create({
   button: {
     position: "absolute",
-    top: 16,
+    top: 8,
     right: 16,
     padding: 10,
     borderRadius: 100,

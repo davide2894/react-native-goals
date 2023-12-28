@@ -1,7 +1,7 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import { AsyncStorageWrapper, persistCache } from "apollo3-cache-persist";
 import { GoalsQueryResult } from "./types";
-import { USER_GOALS_QUERY } from "./graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "./graphql/operations/queries/getGoalsQuery";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const isFirstTimeAccessReactiveVar = makeVar(true);

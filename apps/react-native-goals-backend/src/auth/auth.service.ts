@@ -1,6 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
@@ -14,9 +14,9 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    Logger.log('inside AuthService -> register method');
-    Logger.log({ createUserDto });
-    Logger.log({ createUserDtoPassword: createUserDto.password });
+    console.log('inside AuthService -> register method');
+    console.log({ createUserDto });
+    console.log({ createUserDtoPassword: createUserDto.password });
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const newUser = (await this.prismaService.user.create({
@@ -26,7 +26,7 @@ export class AuthService {
       },
     })) as User;
 
-    Logger.log({ newUser });
+    console.log({ newUser });
 
     if (!newUser) {
       throw new Error('Registration failed');
@@ -39,15 +39,10 @@ export class AuthService {
   }
 
   async login(user: User) {
-    console.log('inside auth.serve.ts -> login method ');
-
-    return this.createAuthTokens(user);
-  }
-
-  async logInGuest(user: User) {
-    console.log('inside  auth.serve.ts -> login method ');
-
-    return this.createAuthTokens(user);
+    console.log('inside auth.serve.ts ->  login method ');
+    const authTokens = await this.createAuthTokens(user);
+    console.log({ authTokens });
+    return authTokens;
   }
 
   async createAccessToken(user): Promise<string> {
@@ -57,7 +52,8 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '5h',
+        expiresIn: '30m',
+        secret: process.env.ACCESS_TOKEN_SECRET,
       },
     );
   }
@@ -69,7 +65,8 @@ export class AuthService {
         id: user.id,
       },
       {
-        expiresIn: '10h',
+        expiresIn: '24h',
+        secret: process.env.REFRESH_TOKEN_SECRET,
       },
     );
     return refreshToken;

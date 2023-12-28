@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import trimString from "../../utils/trimString";
 import { useMutation } from "@apollo/client";
-import INCREMENT_SCORE_MUTATION from "../../graphql/mutations/incrementScoreMutation";
-import DECREMENT_SCORE_MUTATION from "../../graphql/mutations/decrementScoreMutation";
-import DELETE_GOAL_MUTATION from "../../graphql/mutations/deleteGoalMutation";
-import RESET_SCORE_MUTATION from "../../graphql/mutations/resetScoreMutation";
+import INCREMENT_SCORE_MUTATION from "../../graphql/operations/mutations/incrementScoreMutation";
+import DECREMENT_SCORE_MUTATION from "../../graphql/operations/mutations/decrementScoreMutation";
+import DELETE_GOAL_MUTATION from "../../graphql/operations/mutations/deleteGoalMutation";
+import RESET_SCORE_MUTATION from "../../graphql/operations/mutations/resetScoreMutation";
 import { useDebouncedCallback } from "use-debounce";
 
 import { getAllGoalsInCache } from "../../cache";
-import EDIT_GOAL_TITLE_MUTATION from "../../graphql/mutations/editGoalTitleMutation";
+import EDIT_GOAL_TITLE_MUTATION from "../../graphql/operations/mutations/editGoalTitleMutation";
 
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -28,7 +28,7 @@ import {
   white,
 } from "../../style/colors";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
-import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
 
 /**
  * TODO
@@ -46,12 +46,12 @@ import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQue
     [x] guest -> "Beware! This is a temporary account: when you logout all data will be lost. Be sure to register properly if you want to keep track of your goals consistently"
  * jwt: 
     [x] should i really use another type of storage that's not async storage for jwt?
-    [] set expiration to 1h and fix the expiration issue
+    [x] set expiration to 1h and fix the expiration issue
         ---> [x] bug: fix user can register but gets cached goals from same old user (the one with a lot of goals)
-        ---> [] login doesn't work (see how to wrap it in auth guard if necessary)
-        [] add jwtAuthWithRefresh
-        [] test error cases
- * [] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
+        ---> [x] login doesn't work (see how to wrap it in auth guard if necessary)
+        [x] add jwtAuthWithRefresh
+        [x] test error cases
+ * [x] style bug: bottom sheet -> figure out why is not consistent with the amout of screen it takes
  * [] cover project with unit tests
  * */
 
@@ -102,7 +102,10 @@ function Goal(props: { goal: GoalType }) {
       newCurrentScore: actualScoreState,
     },
     update: (cache, { data }) => {
-      const updatedGoal = data.incrementScore;
+      const updatedGoal = data.decrementScore;
+      console.log("Goal.tsx -> decrement score mutation response");
+      console.log(data);
+      console.log({ updatedGoal });
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       });
@@ -134,7 +137,8 @@ function Goal(props: { goal: GoalType }) {
       goalId: goal.id,
     },
     update: (cache, { data }) => {
-      const updatedGoal = data.incrementScore;
+      console.log(data);
+      const updatedGoal = data.resetScore;
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       });

@@ -10,16 +10,17 @@ import {
   Platform,
 } from "react-native";
 import { useMutation } from "@apollo/client";
-import CREATE_GOAL_MUTATION from "../../graphql/mutations/addGoalMutation";
+import CREATE_GOAL_MUTATION from "../../graphql/operations/mutations/addGoalMutation";
 import { formStyles } from "../../style/formCommonStyles";
 import { lightGray } from "../../style/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { USER_GOALS_QUERY } from "../../graphql/operations/mutations/getGoalsQuery";
+import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 function GoalForm(props: {
-  onKeyboardShow: (evt: any) => void;
-  onKeyboardHide: () => void;
-  closeBottomSheet: () => void;
+  onKeyboardShow?: (evt: any) => void;
+  onKeyboardHide?: () => void;
+  closeBottomSheet?: () => void;
 }) {
   const [goalTitle, setGoalTitle] = useState("");
   const [goalMaxScore, setGoalMaxScore] = useState("");
@@ -60,26 +61,10 @@ function GoalForm(props: {
     await useCreateGoalMutation();
   }
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      `${isIosRef ? "keyboardWillShow" : "keyboardDidShow"}`,
-      props.onKeyboardShow
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      `${isIosRef ? "keyboardWillHide" : "keyboardDidHide"}`,
-      props.onKeyboardHide
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   return (
     <View style={formStyles.container}>
       <KeyboardAvoidingView behavior={isIosRef ? "padding" : "height"}>
-        <TextInput
+        <BottomSheetTextInput
           id="nameInput"
           // autoFocus={true}
           style={formStyles.input}
@@ -90,7 +75,7 @@ function GoalForm(props: {
             setGoalTitle(updatedText);
           }}
         />
-        <TextInput
+        <BottomSheetTextInput
           style={formStyles.input}
           id="scoreInput"
           placeholder="Times per week"

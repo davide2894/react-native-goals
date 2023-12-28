@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableHighlight } from "react-native";
-import { lightGray, caribbeanGreen, outerSpace } from "../src/style/colors";
+import { lightGray, caribbeanGreen, outerSpace } from "../../style/colors";
 import { Entypo } from "@expo/vector-icons";
 
 const AddGoalButton = (props: { onPressCallback: () => void }) => {

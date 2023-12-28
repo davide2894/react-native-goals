@@ -8,14 +8,18 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwtRefresh',
 ) {
   constructor() {
+    console.log('-------------------');
+    console.log('JwtRefreshStrategy');
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromHeader('refreshtoken'),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_SECRET,
     });
   }
 
   async validate(payload: any) {
-    return { user: payload.user };
+    console.log('jwt.refresh-strategy.ts');
+    console.log({ payload });
+    return { payload };
   }
 }

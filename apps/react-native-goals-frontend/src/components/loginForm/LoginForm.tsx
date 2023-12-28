@@ -21,6 +21,7 @@ const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       access_token
+      refresh_token
     }
   }
 `;
@@ -47,9 +48,13 @@ export default function LoginForm() {
       console.log({ loginResponse: response });
       if (response.login) {
         console.log({ loginResponse: response });
-        await apolloClient.resetStore();
-        await saveAccessTokenToStorage(response.login?.access_token);
-        await saveRefreshTokenToStorage(response.login?.refresh_token);
+        await apolloClient.clearStore();
+        console.log({
+          at: response.login.access_token,
+          rt: response.login.refresh_token,
+        });
+        await saveAccessTokenToStorage(response.login.access_token);
+        await saveRefreshTokenToStorage(response.login.refresh_token);
         await AsyncStorage.setItem(isFirstTimeAccessKey, "false");
         isFirstTimeAccessReactiveVar(false);
         auth.updateAuthTokensInContext(

@@ -17,10 +17,6 @@ import {
   outerSpace,
   white,
 } from "../../style/colors";
-import { useWindowDimensions } from "react-native";
-import GoalForm from "../goalForm/GoalForm";
-import { Entypo } from "@expo/vector-icons";
-import CloseButton from "../closeModalButton/CloseButton";
 
 function BottomSheet(props: {
   children: ReactNode;
