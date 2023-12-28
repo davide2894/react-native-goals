@@ -1,8 +1,18 @@
 # React Native Goals
 
-<img src="assets/preview_1.png" width=326>
-<img src="assets/preview_2.png" width=326>
-<img src="assets/preview_4.png" width=326>
+<table width="100%">
+  <tr>
+  <td width="33%">
+    <img src="assets/preview_1.png">
+  </td>
+  <td width="33%">
+    <img src="assets/preview_2.png">
+  </td>
+  <td width="33%">
+    <img src="assets/preview_4.png">
+  </td>
+  </tr>
+</table>
 
 Mobile app of [React Daily Goal Tracker](https://github.com/davide2894/react-daily-goal-tracker), a web app I build previously to track weekly goals on a daily basis.
 
