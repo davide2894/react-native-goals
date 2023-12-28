@@ -63,7 +63,7 @@ Download Expo Go from the app store of your mobile device (App Store for IOS and
 - Download and intstall [Ngrok](https://ngrok.com/download), a software needed to expose the local backend server to the internet, so that it is accessible from the Expo Go app
 - Open a terminal
 - Run the command `ngrok http 3000`
-- Once Ngrok generates the public url, open the `Router.tsx` and replace the url inside the httpLink variable, as shown below
+- Once Ngrok generates the public url, open `apps/react-native-goals-frontend/src/components/router/Router.tsx` and replace the url inside the httpLink variable, as shown below
 
 `const httpLink = new HttpLink({
 uri: <replace link here>,
