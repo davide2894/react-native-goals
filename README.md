@@ -46,6 +46,10 @@ This app uses [Expo](https://docs.expo.dev/) - a framework to develop React Nati
 - [Expo](https://docs.expo.dev/)
 - [Expo Go](https://docs.expo.dev/get-started/expo-go/)
 
+## Requirements
+
+Make sure to have installed the [Latest Stable Version of Node](https://nodejs.org/en) on your machine. This is to avoid incompatibilty and/or conflict issues among the needed dependencies to run the app
+
 ## Installing
 
 Run the command `npm i` at the root folder level
