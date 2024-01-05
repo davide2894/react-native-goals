@@ -50,13 +50,33 @@ This app uses [Expo](https://docs.expo.dev/) - a framework to develop React Nati
 
 Make sure to have installed the [Latest Stable Version of Node](https://nodejs.org/en) on your machine. This is to avoid incompatibilty and/or conflict issues among the needed dependencies to run the app
 
-## Installing
+## Install common dependenceis
 
 Run the command `npm i` at the root folder level
 
-## Executing program
+## Start Backend locally
 
-To run locally this app you need to follow these steps
+### Configure environment variables
+
+In the `apps/react-native-goals-backend` directory, create an `.env` file with the following environment variables:
+
+```
+DATABASE_URL:file:./src/prisma/dev.db
+
+ACCESS_TOKEN_SECRET='password_you_set'
+ACCESS_TOKEN_EXPIRATION=1h
+REFRESH_TOKEN_SECRET='password_you_set'
+REFRESH_TOKEN_EXPIRATION=6h
+```
+
+### Install dependencies
+
+- Open a terminal in the project root folder
+- Run `cd apps/react-native-goals-backend`
+- Run `npm run prisma:generateClient`
+- Run `npm run start:watch`
+
+## Run the frontend locally
 
 ### Download the Expo Go app
 
@@ -73,14 +93,7 @@ Download Expo Go from the app store of your mobile device (App Store for IOS and
 uri: <replace link here>,
 });`
 
-### Run the backend locally
-
-- Open a terminal in the project root folder
-- Run `cd apps/react-native-goals-backend`
-- Run `npm run prisma:generateClient`
-- Run `npm run start:watch`
-
-### Run the frontend locally
+### Install dependencies
 
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-frontend`
