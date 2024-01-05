@@ -73,6 +73,7 @@ REFRESH_TOKEN_EXPIRATION=6h
 
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-backend`
+- Run `npm i`
 - Run `npm run prisma:generateClient`
 - Run `npm run start:watch`
 
@@ -97,4 +98,5 @@ uri: <replace link here>,
 
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-frontend`
+- Run `npm i`
 - Run `npm run start` (you may need to run expo in tunnel mode in some cases, with the `npm run start --tunnel` command)
