@@ -6,7 +6,11 @@ import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [JwtModule.register({})],
+  imports: [
+    JwtModule.register({
+      secret: process.env.ACCESS_TOKEN_SECRET,
+    }),
+  ],
   providers: [AuthService, PrismaService, JwtStrategy, JwtRefreshStrategy],
   exports: [JwtModule, AuthService],
 })
