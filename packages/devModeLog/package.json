@@ -1,0 +1,9 @@
+{
+  "name": "dev-mode-log",
+  "dependencies": {
+    "typescript": "latest"
+  },
+  "exports": {
+    ".": "./index.ts"
+  }
+}

@@ -28,7 +28,8 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "ui": "*",
-    "use-debounce": "^10.0.0"
+    "use-debounce": "^10.0.0",
+    "dev-mode-log": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
