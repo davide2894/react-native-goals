@@ -2,13 +2,16 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "CommonJS",
+    "target": "es5",
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "strict": true
+    "strict": true,
+    "outDir": "./dist",
+    // "paths": {
+    //   "dev-mode-log": ["./dist/index.js"]
+    // }
   },
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "build", "node_modules"],
+  "include": ["."],
 }

@@ -1,9 +1,13 @@
 {
   "name": "dev-mode-log",
+  "version": "1.0.0",
+  "author": "Davide Iaiunese",
   "dependencies": {
     "typescript": "latest"
   },
-  "exports": {
-    ".": "./index.ts"
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
   }
 }
