@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/currentUser.decoratos';
 import { JwtRefreshAuthGuard } from 'src/guards/jwt-refresh-auth.guard';
 import { GoalsService } from 'src/goals/goals.service';
+import { devModeLog } from 'dev-mode-log';
 
 @Resolver('User')
 export class UserResolver {
@@ -21,8 +22,8 @@ export class UserResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<AuthTokensPayload> {
-    console.log('inside UserResolver -> register method ');
-    console.log({
+    devModeLog('inside UserResolver -> register method ');
+    devModeLog({
       email,
       password,
     });
@@ -35,11 +36,11 @@ export class UserResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<object> {
-    console.log('resolvers .ts LOGIN ');
+    devModeLog('resolvers .ts LOGIN ');
     const createUserDto: CreateUserDto = { email, password };
     const validatedUser = await this.authService.validateUser(createUserDto);
     if (validatedUser) {
-      console.log({ validatedUser });
+      devModeLog({ validatedUser });
       return await this.authService.login(validatedUser);
     }
   }
@@ -47,11 +48,11 @@ export class UserResolver {
   @UseGuards(JwtRefreshAuthGuard)
   @Mutation()
   async refreshTokens(@CurrentUser() user: any): Promise<object> {
-    console.log('inside refreshTokens resolver  ');
+    devModeLog('inside refreshTokens resolver  ');
     const userInDb = await this.usersService.getUserById(user?.payload.id);
     const authTokens = await this.authService.createAuthTokens(userInDb);
-    console.log('new tokens');
-    console.log({ authTokens });
+    devModeLog('new tokens');
+    devModeLog({ authTokens });
     return authTokens;
   }
 }

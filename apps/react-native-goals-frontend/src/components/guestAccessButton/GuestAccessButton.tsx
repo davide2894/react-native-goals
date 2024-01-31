@@ -11,9 +11,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
 import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
+import { devModeLog } from "dev-mode-log";
 
 function GuestAccessButton() {
-  console.log("guest access component rendered");
+  devModeLog("guest access component rendered");
   const auth = useAuthContext();
   const apolloClient = useApolloClient();
   const [registerUserMutation] = useMutation(REGISTER_USER, {
@@ -22,14 +23,14 @@ function GuestAccessButton() {
       password: `guestAccessPassword123${uuidv4()}`,
     },
     onCompleted: async (response) => {
-      console.log({
+      devModeLog({
         msg: "registered new guest user",
         response,
       });
       if (response) {
         if (response.register) {
-          console.log("successfully registered");
-          console.log({ registrationInfo: response });
+          devModeLog("successfully registered");
+          devModeLog({ registrationInfo: response });
           await apolloClient.clearStore();
           await saveAccessTokenToStorage(response.register.access_token);
           await saveRefreshTokenToStorage(response.register.refresh_token);
@@ -43,7 +44,7 @@ function GuestAccessButton() {
       }
     },
     onError: (error) => {
-      console.log({
+      devModeLog({
         msg: "ooops! There was a registration error",
         error,
       });
@@ -52,7 +53,7 @@ function GuestAccessButton() {
   });
 
   async function handleGuestAccess() {
-    console.log("guest user registration -> registering guest user");
+    devModeLog("guest user registration -> registering guest user");
     await registerUserMutation();
   }
 

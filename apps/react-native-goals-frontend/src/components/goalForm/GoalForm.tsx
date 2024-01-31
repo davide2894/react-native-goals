@@ -16,6 +16,7 @@ import { lightGray } from "../../style/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { devModeLog } from "dev-mode-log";
 
 function GoalForm(props: {
   onKeyboardShow?: (evt: any) => void;
@@ -35,9 +36,9 @@ function GoalForm(props: {
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       }).userGoals;
-      console.log({ allGoalsInCache });
-      console.log("printing newGoal as it goes in the new array...");
-      console.log(newGoal);
+      devModeLog({ allGoalsInCache });
+      devModeLog("printing newGoal as it goes in the new array...");
+      devModeLog(newGoal);
 
       if (allGoalsInCache) {
         cache.writeQuery({
@@ -49,10 +50,10 @@ function GoalForm(props: {
       }
     },
     onCompleted: (res) => {
-      console.log({ res });
+      devModeLog({ res });
     },
     onError: (error) => {
-      console.log({ error });
+      devModeLog({ error });
     },
   });
 

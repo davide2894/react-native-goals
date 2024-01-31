@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { devModeLog } from 'dev-mode-log';
 
 @Injectable()
 export class AppService {
   getHello(): string {
-    console.log('test log', 'AppService');
+    devModeLog('test log', 'AppService');
 
     return 'Hello World!';
   }

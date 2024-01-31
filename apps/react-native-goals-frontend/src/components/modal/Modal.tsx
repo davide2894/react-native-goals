@@ -1,3 +1,4 @@
+import { devModeLog } from "dev-mode-log";
 import { ReactNode, SyntheticEvent, useEffect } from "react";
 import { Button, View } from "react-native";
 
@@ -8,7 +9,7 @@ function Modal(props: { onClose: any; children?: ReactNode; mode?: string }) {
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.code === "Escape") {
         onClose();
-        console.log("escape pressed");
+        devModeLog("escape pressed");
       }
     }
     document.addEventListener("keydown", handleEscapeKey);

@@ -3,14 +3,15 @@ import { isFirstTimeAccessReactiveVar } from "../cache";
 import { isFirstTimeAccessKey } from "../constants";
 import { saveAccessTokenToStorage } from "../utils/accessToken";
 import { saveRefreshTokenToStorage } from "../utils/refreshToken";
+import { devModeLog } from "dev-mode-log";
 
 async function useOnRegistrationEndOperations(
   apolloClient,
   graphQLOperationResponse,
   auth
 ) {
-  console.log("successfully registered");
-  console.log({ registrationInfo: graphQLOperationResponse });
+  devModeLog("successfully registered");
+  devModeLog({ registrationInfo: graphQLOperationResponse });
   await apolloClient.clearStore();
   await saveAccessTokenToStorage(
     graphQLOperationResponse.register.access_token

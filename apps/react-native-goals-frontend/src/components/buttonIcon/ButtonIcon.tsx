@@ -33,7 +33,7 @@ function ButtonIcon(props: { iconName: string }) {
     },
   });
 
-  // console.log(`PATH IS ============================ ./${props.iconName}.svg`);
+  // devModeLog(`PATH IS ============================ ./${props.iconName}.svg`);
 
   // <View style={styles.container}>
   //   <Pressable style={styles.container}>

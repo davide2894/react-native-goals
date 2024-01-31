@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { accessTokenKey } from "../constants";
+import { devModeLog } from "dev-mode-log";
 
 export async function saveAccessTokenToStorage(access_token: string) {
   return await SecureStore.setItemAsync(accessTokenKey, access_token);
@@ -10,6 +11,6 @@ export async function getAccessTokenFromStorage() {
 }
 
 export async function deleteAccessTokenFromStorage() {
-  console.log("accessToken.ts ---> deleteAccessTokenFromStorage() called");
+  devModeLog("accessToken.ts ---> deleteAccessTokenFromStorage() called");
   await SecureStore.deleteItemAsync(accessTokenKey);
 }

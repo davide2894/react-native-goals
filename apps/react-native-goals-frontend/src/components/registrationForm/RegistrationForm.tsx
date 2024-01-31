@@ -19,6 +19,7 @@ import { isFirstTimeAccessKey } from "../../constants";
 import { formStyles } from "../../style/formCommonStyles";
 import { lightGray } from "../../style/colors";
 import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
+import { devModeLog } from "dev-mode-log";
 
 const REGISTER_USER = gql`
   mutation Register($email: String!, $password: String!) {
@@ -40,15 +41,15 @@ export default function RegistrationForm() {
       password,
     },
     onCompleted: async (response) => {
-      console.log({
+      devModeLog({
         msg: "registered new user",
         newUserEmail: email,
         response,
       });
       if (response) {
         if (response.register) {
-          console.log("successfully registered");
-          console.log({ registrationInfo: response });
+          devModeLog("successfully registered");
+          devModeLog({ registrationInfo: response });
           await apolloClient.clearStore();
           await saveAccessTokenToStorage(response.register?.access_token);
           await saveRefreshTokenToStorage(response.register?.refresh_token);
@@ -62,7 +63,7 @@ export default function RegistrationForm() {
       }
     },
     onError: (error) => {
-      console.log({
+      devModeLog({
         msg: "ooops! There was a registration error",
         error,
       });
@@ -73,18 +74,18 @@ export default function RegistrationForm() {
   });
 
   const handleRegister = async () => {
-    console.log("Registration button pressed");
+    devModeLog("Registration button pressed");
     try {
-      console.log("registering user");
-      console.log("Email:", email);
-      console.log("Password:", password);
+      devModeLog("registering user");
+      devModeLog("Email:", email);
+      devModeLog("Password:", password);
       await registerUserMutation();
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log("RegistrationForm component rendered");
+  devModeLog("RegistrationForm component rendered");
 
   return (
     <View

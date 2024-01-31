@@ -6,33 +6,34 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JsonWebTokenError } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { devModeLog } from 'dev-mode-log';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('---------------');
-    console.log('JwtAuthGuard');
-    console.log(' async canActivate(context: ExecutionContext)');
+    devModeLog('---------------');
+    devModeLog('JwtAuthGuard');
+    devModeLog(' async canActivate(context: ExecutionContext)');
     const parentCanActivate = (await super.canActivate(context)) as boolean;
-    console.log({ parentCanActivate });
+    devModeLog({ parentCanActivate });
     return parentCanActivate;
   }
 
   getRequest(context: ExecutionContext) {
-    console.log('---------------');
-    console.log('JwtAuthGuard');
-    console.log('getRequest(context: ExecutionContext)');
+    devModeLog('---------------');
+    devModeLog('JwtAuthGuard');
+    devModeLog('getRequest(context: ExecutionContext)');
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;
   }
 
   handleRequest(err: any, user: any, info: any, context: any, status: any) {
-    console.log('---------------');
-    console.log('JwtAuthGuard');
-    console.log(
+    devModeLog('---------------');
+    devModeLog('JwtAuthGuard');
+    devModeLog(
       'handleRequest(err: any, user: any, info: any, context: any, status: any)',
     );
-    console.log({
+    devModeLog({
       err,
       user,
       info,
@@ -47,10 +48,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   async validate(payload: any) {
-    console.log('---------------');
-    console.log('JwtAuthGuard');
-    console.log('async validate(payload: any)');
-    console.log({ payload });
+    devModeLog('---------------');
+    devModeLog('JwtAuthGuard');
+    devModeLog('async validate(payload: any)');
+    devModeLog({ payload });
     return { user: payload.user };
   }
 }

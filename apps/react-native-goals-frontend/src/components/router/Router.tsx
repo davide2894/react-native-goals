@@ -23,6 +23,8 @@ import {
   deleteAccessTokenFromStorage,
   saveAccessTokenToStorage,
 } from "../../utils/accessToken";
+import { debuglog } from "util";
+import { devModeLog } from "dev-mode-log";
 
 const REFRESH_TOKENS = gql`
   mutation RefreshTokens($access_token: String!, $refresh_token: String!) {
@@ -34,14 +36,14 @@ const REFRESH_TOKENS = gql`
 `;
 
 function Router() {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("Router component rendered");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("Router component rendered");
   const auth = useAuthContext();
 
-  console.log({
+  devModeLog({
     msg: "Router:::::auth tokens state from context is",
     access_token: auth.authTokensStateValues.access_token,
     refresh_token: auth.authTokensStateValues.refresh_token,
@@ -57,11 +59,11 @@ function Router() {
 
   const refreshToken = async () => {
     try {
-      console.log(
+      devModeLog(
         "inside Observer -> refreshToken -> trycach -> sending refreshTokens mutation..."
       );
-      console.log("checking tokens status before sending the mutation");
-      console.log({
+      devModeLog("checking tokens status before sending the mutation");
+      devModeLog({
         access_token: auth.authTokensStateValues.access_token,
         refresh_token: auth.authTokensStateValues.refresh_token,
       });
@@ -74,7 +76,7 @@ function Router() {
       });
 
       if (response) {
-        console.log({
+        devModeLog({
           refreshedAT: response.data.refreshTokens.access_token,
           refreshedRT: response.data.refreshTokens.refresh_token,
         });
@@ -90,9 +92,9 @@ function Router() {
         );
       }
     } catch (err) {
-      console.log("one or both tokens are expired so we must log out user");
-      console.log("going to call auth.resetAuthTokensInContext()");
-      console.log({ err });
+      devModeLog("one or both tokens are expired so we must log out user");
+      devModeLog("going to call auth.resetAuthTokensInContext()");
+      devModeLog({ err });
       Alert.alert("User tokens expired. Please login again :/");
       await deleteAccessTokenFromStorage();
       await deleteRefreshTokenFromStorage();
@@ -102,11 +104,11 @@ function Router() {
   };
 
   const authLink = new ApolloLink((operation, forward) => {
-    console.log("App component ---> authLink --> new ApolloLink");
-    console.log(
+    devModeLog("App component ---> authLink --> new ApolloLink");
+    devModeLog(
       "App component ---> authLink --> new ApolloLink --> this is the token from state, passed to the headers"
     );
-    console.log(auth.authTokensStateValues);
+    devModeLog(auth.authTokensStateValues);
 
     operation.setContext(({ headers }) => ({
       headers: {
@@ -122,17 +124,17 @@ function Router() {
   });
 
   const httpLink = new HttpLink({
-    uri: "https://5081-93-149-133-100.ngrok-free.app/graphql",
+    uri: "https://13cf-93-67-213-59.ngrok-free.app/graphql",
   });
 
   const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
-      console.log("\n\n\n");
-      console.log("onError");
-      console.log({ graphQLErrors });
-      console.log({ networkError });
-      console.log({ operationName: operation.operationName });
-      console.log({ operationVariables: operation.variables });
+      devModeLog("\n\n\n");
+      devModeLog("onError");
+      devModeLog({ graphQLErrors });
+      devModeLog({ networkError });
+      devModeLog({ operationName: operation.operationName });
+      devModeLog({ operationVariables: operation.variables });
 
       if (graphQLErrors) {
         for (let err of graphQLErrors) {
@@ -145,15 +147,15 @@ function Router() {
                 FetchResult<Record<string, any>>
               >((observer) => {
                 const tryRefreshToken = async () => {
-                  console.log("\n");
-                  console.log("inside the observer");
+                  devModeLog("\n");
+                  devModeLog("inside the observer");
                   try {
-                    console.log(
+                    devModeLog(
                       "sending refresh token graphql operation to server..."
                     );
 
                     const token = await refreshToken();
-                    console.log({ token });
+                    devModeLog({ token });
                     // Retry the failed request
                     const subscriber = {
                       next: observer.next.bind(observer),
@@ -174,9 +176,9 @@ function Router() {
       }
 
       if (networkError && networkError.message.includes("401")) {
-        console.log({ networkError });
-        console.log({ networkErrName: networkError.name });
-        console.log({ networkErrMessage: networkError.message });
+        devModeLog({ networkError });
+        devModeLog({ networkErrName: networkError.name });
+        devModeLog({ networkErrMessage: networkError.message });
       }
     }
   );

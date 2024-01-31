@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './create-user.dto';
 import { User } from '@prisma/client';
+import { devModeLog } from 'dev-mode-log';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -51,7 +52,7 @@ describe('UsersService', () => {
         },
       });
 
-      console.log({ queryResult });
+      devModeLog({ queryResult });
       expect(queryResult).toBeDefined();
       expect(queryResult).toHaveProperty('email');
     });

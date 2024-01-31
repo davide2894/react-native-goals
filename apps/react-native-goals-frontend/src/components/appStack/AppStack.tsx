@@ -1,13 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import GoalsScreen from "../../screens/goalsScreen/GoalsScreen";
+import { devModeLog } from "dev-mode-log";
 
 function AppStack() {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("AppStack component rendered");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("AppStack component rendered");
 
   const Stack = createNativeStackNavigator();
 

@@ -5,6 +5,7 @@ import { Goal } from 'src/graphql';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { GoalsService } from './goals.service';
+import { devModeLog } from 'dev-mode-log';
 
 @Resolver('Goals')
 export class GoalsResolver {
@@ -16,28 +17,28 @@ export class GoalsResolver {
   @Query(() => [Goal])
   @UseGuards(JwtAuthGuard)
   async userGoals(@CurrentUser() user: any) {
-    console.log('------------------------------------------------');
-    console.log('inside user goals  resolver -> userGoals()');
-    console.log('user intercepted in request header');
-    console.log(user);
+    devModeLog('------------------------------------------------');
+    devModeLog('inside user goals  resolver -> userGoals()');
+    devModeLog('user intercepted in request header');
+    devModeLog(user);
     const goals = await this.goalsService.getUserGoals(user?.payload?.id);
-    console.log('goals that  are going to be sent to the frontend');
-    console.log({ goals });
+    devModeLog('goals that  are going to be sent to the frontend');
+    devModeLog({ goals });
     return goals;
   }
 
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async incrementScore(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('------------------------------------------------');
-    console.log('users.resolvers.ts  --->  incrementScore method');
-    console.log(user);
-    console.log({ userID: user.payload.id });
+    devModeLog('------------------------------------------------');
+    devModeLog('users.resolvers.ts  --->  incrementScore method');
+    devModeLog(user);
+    devModeLog({ userID: user.payload.id });
     const userInDb = await this.usersService.getUserById(user?.payload.id);
-    console.log({ requestVars: req.body.variables });
-    console.log({ userInDb });
-    console.log({ reqBodyVarsId: req.body.variables.id });
-    console.log({
+    devModeLog({ requestVars: req.body.variables });
+    devModeLog({ userInDb });
+    devModeLog({ reqBodyVarsId: req.body.variables.id });
+    devModeLog({
       reqBodyVarNewCurrentScored: req.body.variables.newCurrentScore,
     });
     const updatedGoal = await this.goalsService.updateGoalCurrentScore(
@@ -46,7 +47,7 @@ export class GoalsResolver {
       req.body.variables.newCurrentScore,
     );
 
-    console.log({ updatedGoal });
+    devModeLog({ updatedGoal });
 
     return updatedGoal;
   }
@@ -54,7 +55,7 @@ export class GoalsResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async decrementScore(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('users.resolvers.ts ---> decrementScore method');
+    devModeLog('users.resolvers.ts ---> decrementScore method');
     const userInDb = await this.usersService.getUserById(user?.payload.id);
     const updatedGoal = await this.goalsService.updateGoalCurrentScore(
       userInDb.id,
@@ -62,7 +63,7 @@ export class GoalsResolver {
       req.body.variables.newCurrentScore,
     );
 
-    console.log({ updatedGoal });
+    devModeLog({ updatedGoal });
 
     return updatedGoal;
   }
@@ -70,7 +71,7 @@ export class GoalsResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async resetScore(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('users.resolvers.ts ---> resetScore method');
+    devModeLog('users.resolvers.ts ---> resetScore method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const updatedGoal = await this.goalsService.resetScore(
       userInDb.id,
@@ -83,7 +84,7 @@ export class GoalsResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async deleteGoal(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('users.resolvers.ts ---> deleteGoal method');
+    devModeLog('users.resolvers.ts ---> deleteGoal method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const updatedGoal = await this.goalsService.deleteGoal(
       userInDb.id,
@@ -96,7 +97,7 @@ export class GoalsResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async createGoal(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('users.resolvers.ts--->  createGoal method');
+    devModeLog('users.resolvers.ts--->  createGoal method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const goalTitle = req.body.variables.goalTitle;
     const maxScore = req.body.variables.maxScore;
@@ -106,7 +107,7 @@ export class GoalsResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation()
   async editGoalTitle(@CurrentUser() user: any, @Context('req') req: any) {
-    console.log('users.resolvers.ts--->  editGoalTitle method');
+    devModeLog('users.resolvers.ts--->  editGoalTitle method');
     const userInDb = await this.usersService.getUserById(user?.payload?.id);
     const goalId = req.body.variables.goalId;
     const goalTitle = req.body.variables.goalTitle;

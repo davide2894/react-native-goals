@@ -6,13 +6,14 @@ import { useReactiveVar } from "@apollo/client";
 import { Fragment } from "react";
 import { isFirstTimeAccessReactiveVar } from "../../cache";
 import { white } from "../../style/colors";
+import { devModeLog } from "dev-mode-log";
 
 function AuthStack() {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("AuthStack component rendered");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("AuthStack component rendered");
   const Stack = createNativeStackNavigator();
   const isFirstAccess = useReactiveVar(isFirstTimeAccessReactiveVar);
 
@@ -41,8 +42,8 @@ function AuthStack() {
     },
   };
 
-  console.log("logging firstAccessReactiveVar value");
-  console.log({ isFirstAccess });
+  devModeLog("logging firstAccessReactiveVar value");
+  devModeLog({ isFirstAccess });
 
   return (
     <NavigationContainer theme={theme}>

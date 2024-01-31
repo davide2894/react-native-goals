@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { refreshTokenKey } from "../constants";
+import { devModeLog } from "dev-mode-log";
 
 export async function saveRefreshTokenToStorage(access_token: string) {
   return await SecureStore.setItemAsync(refreshTokenKey, access_token);
@@ -10,7 +11,7 @@ export async function getRefreshTokenFromStorage() {
 }
 
 export async function deleteRefreshTokenFromStorage() {
-  console.log("accessToken.ts ---> deleteRefreshTokenFromStorage() called");
+  devModeLog("accessToken.ts ---> deleteRefreshTokenFromStorage() called");
 
   await SecureStore.deleteItemAsync(refreshTokenKey);
 }

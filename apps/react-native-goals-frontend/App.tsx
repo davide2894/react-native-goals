@@ -3,13 +3,14 @@ import { AuthProvider } from "./src/components/authProvider/AuthProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { devModeLog } from "dev-mode-log";
 
 export default function App() {
-  console.log("------------------------------------------------------------");
-  console.log("------------------------------------------------------------");
-  console.log("------------------------------------------------------------");
-  console.log("------------------------------------------------------------");
-  console.log("App component rendered");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("App component rendered");
 
   /**
    * TODO:

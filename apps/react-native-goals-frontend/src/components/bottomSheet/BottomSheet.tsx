@@ -17,13 +17,14 @@ import {
   outerSpace,
   white,
 } from "../../style/colors";
+import { devModeLog } from "dev-mode-log";
 
 function BottomSheet(props: {
   children: ReactNode;
   translateY: Animated.Value;
   bottomSheetHeight: number;
 }) {
-  console.log({ bottomSheetHeight: props.bottomSheetHeight });
+  devModeLog({ bottomSheetHeight: props.bottomSheetHeight });
 
   return (
     <Animated.View

@@ -3,13 +3,14 @@ import { Button, View, Text, ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
 
 import { aquaHaze, outerSpace, white } from "../../style/colors";
+import { devModeLog } from "dev-mode-log";
 
 function HomeScreen({ navigation }) {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("HomeScreen component rendered");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("HomeScreen component rendered");
 
   useEffect(() => {
     setTimeout(() => {
@@ -18,10 +19,10 @@ function HomeScreen({ navigation }) {
   });
 
   function handlePress() {
-    console.log(
+    devModeLog(
       "HomeScreen component rendered ---> button to GoalsScreen pressed"
     );
-    console.log("HomeScreen component rendered ---> navigating to GoalsScreen");
+    devModeLog("HomeScreen component rendered ---> navigating to GoalsScreen");
     navigation.navigate("AuthScreen");
   }
 

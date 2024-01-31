@@ -5,13 +5,14 @@ import { useApolloClient } from "@apollo/client";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { caribbeanGreen } from "../../style/colors";
 import { deleteRefreshTokenFromStorage } from "../../utils/refreshToken";
+import { devModeLog } from "dev-mode-log";
 
 function SignOutButton() {
   const auth = useAuthContext();
   const apolloClient = useApolloClient();
 
   async function handleSignOut() {
-    console.log("singout button pressed");
+    devModeLog("singout button pressed");
     await deleteAccessTokenFromStorage();
     await deleteRefreshTokenFromStorage();
     await apolloClient.clearStore();

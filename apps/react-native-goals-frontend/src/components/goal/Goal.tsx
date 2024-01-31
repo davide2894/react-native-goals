@@ -29,6 +29,7 @@ import {
 } from "../../style/colors";
 import { displayGeneralErrorMessage } from "../../utils/ErrorMessages";
 import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery";
+import { devModeLog } from "dev-mode-log";
 
 /**
  * TODO
@@ -56,7 +57,7 @@ import { USER_GOALS_QUERY } from "../../graphql/operations/queries/getGoalsQuery
  * */
 
 function Goal(props: { goal: GoalType }) {
-  console.log("Goal.tsx -> rendering goal component");
+  devModeLog("Goal.tsx -> rendering goal component");
   const goal = props.goal;
   const [editableTitleValue, setEditableTitleValue] = useState(goal.title);
   const [actualScoreState, setActualScorestate] = useState(goal.actualScore);
@@ -87,12 +88,12 @@ function Goal(props: { goal: GoalType }) {
       }
     },
     onCompleted: (res) => {
-      console.log("increment goal score mutation completed");
-      console.log("res");
-      console.log(res);
+      devModeLog("increment goal score mutation completed");
+      devModeLog("res");
+      devModeLog(res);
     },
     onError: (error) => {
-      console.log(error);
+      devModeLog(error);
     },
   });
 
@@ -103,9 +104,9 @@ function Goal(props: { goal: GoalType }) {
     },
     update: (cache, { data }) => {
       const updatedGoal = data.decrementScore;
-      console.log("Goal.tsx -> decrement score mutation response");
-      console.log(data);
-      console.log({ updatedGoal });
+      devModeLog("Goal.tsx -> decrement score mutation response");
+      devModeLog(data);
+      devModeLog({ updatedGoal });
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
       });
@@ -123,12 +124,12 @@ function Goal(props: { goal: GoalType }) {
       }
     },
     onCompleted: (res) => {
-      console.log("DECREMENT goal score mutation completed");
-      console.log("res");
-      console.log(res);
+      devModeLog("DECREMENT goal score mutation completed");
+      devModeLog("res");
+      devModeLog(res);
     },
     onError: (error) => {
-      console.log({ error });
+      devModeLog({ error });
     },
   });
 
@@ -137,7 +138,7 @@ function Goal(props: { goal: GoalType }) {
       goalId: goal.id,
     },
     update: (cache, { data }) => {
-      console.log(data);
+      devModeLog(data);
       const updatedGoal = data.resetScore;
       const allGoalsInCache = cache.readQuery<GoalsQueryResult>({
         query: USER_GOALS_QUERY,
@@ -156,10 +157,10 @@ function Goal(props: { goal: GoalType }) {
       }
     },
     onCompleted: (res) => {
-      console.log({ res });
+      devModeLog({ res });
     },
     onError: (error) => {
-      console.log({ error });
+      devModeLog({ error });
     },
   });
 
@@ -185,16 +186,16 @@ function Goal(props: { goal: GoalType }) {
       }
     },
     onCompleted: (res) => {
-      console.log({ res });
+      devModeLog({ res });
     },
     onError: (error) => {
-      console.log({ error });
+      devModeLog({ error });
       displayGeneralErrorMessage();
     },
   });
 
   async function handleIncrementScore() {
-    console.log(
+    devModeLog(
       "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
     );
     await incrementScoreMutation();
@@ -224,10 +225,10 @@ function Goal(props: { goal: GoalType }) {
       }
     },
     onCompleted: (res) => {
-      console.log({ res });
+      devModeLog({ res });
     },
     onError: (error) => {
-      console.log({ error });
+      devModeLog({ error });
     },
   });
 
@@ -250,36 +251,36 @@ function Goal(props: { goal: GoalType }) {
   );
 
   const debouncedTitleTrim = useDebouncedCallback(function (text) {
-    console.log({ text });
+    devModeLog({ text });
     const trimmedEventValue = trimString(text);
     if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
-      console.log("setting new title state");
+      devModeLog("setting new title state");
       setEditableTitleValue(trimmedEventValue);
     } else {
-      console.log("not trimmed");
+      devModeLog("not trimmed");
     }
   }, 500);
 
   function handleTitleTrimming(text) {
-    console.log({ text });
+    devModeLog({ text });
     const trimmedEventValue = trimString(text);
     if (trimmedEventValue && editableTitleValue !== trimmedEventValue) {
-      console.log("setting new title state");
+      devModeLog("setting new title state");
       setEditableTitleValue(trimmedEventValue);
     } else {
-      console.log("not trimmed");
+      devModeLog("not trimmed");
     }
   }
 
   async function handleTitleChange(text) {
-    console.log("handling title change");
-    console.log(`current title text value: ${text}`);
+    devModeLog("handling title change");
+    devModeLog(`current title text value: ${text}`);
     handleTitleTrimming(text);
     await debouncedEditTitleMutation();
   }
 
   async function handleDecrementScore() {
-    console.log(
+    devModeLog(
       "Goal.tsx --> handleIncrementScore --> calling incrementScoreMutation"
     );
     await decrementScoreMutation();

@@ -1,14 +1,15 @@
 import { Goal } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { devModeLog } from 'dev-mode-log';
 
 @Injectable()
 export class GoalsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getUserGoals(id: number) {
-    console.log('user-service.ts --> getUserGoals method');
-    console.log({
+    devModeLog('user-service.ts --> getUserGoals method');
+    devModeLog({
       userIdRef: id,
     });
     const goals = await this.prismaService.goal.findMany({
@@ -20,7 +21,7 @@ export class GoalsService {
     if (!goals.length) {
       goals.push(await this.createDummyUserGoal(id));
 
-      console.log(
+      devModeLog(
         `no goals found for user with id ${id}\n proceeding to create a dummy goal`,
       );
     }
@@ -28,7 +29,7 @@ export class GoalsService {
   }
 
   async createDummyUserGoal(userId: number): Promise<Goal> {
-    console.log(`createDummyUserGoal ---> passed userId is: ${userId}`);
+    devModeLog(`createDummyUserGoal ---> passed userId is: ${userId}`);
     const goal = await this.prismaService.goal.create({
       data: {
         title: `this is a dummy goal for user with id ${userId}`,
@@ -39,9 +40,9 @@ export class GoalsService {
         userIdRef: userId,
       },
     });
-    console.log('users.service.ts --> createDummyGoal()');
-    console.log('dummy goal created is the following ');
-    console.log({ goal });
+    devModeLog('users.service.ts --> createDummyGoal()');
+    devModeLog('dummy goal created is the following ');
+    devModeLog({ goal });
     return goal;
   }
 
@@ -50,10 +51,10 @@ export class GoalsService {
     goalId: number,
     newCurrentScore: number,
   ) {
-    console.log(
+    devModeLog(
       'user.service.ts ---> updateGoalCurrentScore service method... -->',
     );
-    console.log({
+    devModeLog({
       userId,
       goalId,
       newCurrentScore,
@@ -70,7 +71,7 @@ export class GoalsService {
   }
 
   async resetScore(userId: number, goalId: number) {
-    console.log('user.service.ts ---> resetScore service method... -->');
+    devModeLog('user.service.ts ---> resetScore service method... -->');
     return await this.prismaService.goal.update({
       where: {
         userIdRef: userId,
@@ -82,7 +83,7 @@ export class GoalsService {
     });
   }
   async deleteGoal(userId: number, goalId: number) {
-    console.log('user.service.ts ---> deleteGoal service method... -->');
+    devModeLog('user.service.ts ---> deleteGoal service method... -->');
     return await this.prismaService.goal.delete({
       where: {
         userIdRef: userId,
@@ -96,7 +97,7 @@ export class GoalsService {
     goalTitle: string,
     maxScore: number,
   ): Promise<Goal> {
-    console.log('user.service.ts ---> createGoal service method... -->');
+    devModeLog('user.service.ts ---> createGoal service method... -->');
     const goal = await this.prismaService.goal.create({
       data: {
         title: goalTitle,
@@ -108,8 +109,8 @@ export class GoalsService {
       },
     });
 
-    console.log('created goal successfully');
-    console.log({ createdGoal: goal });
+    devModeLog('created goal successfully');
+    devModeLog({ createdGoal: goal });
     return goal;
   }
 

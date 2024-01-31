@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isFirstTimeAccessKey } from "../../constants";
 import { formStyles } from "../../style/formCommonStyles";
 import { saveRefreshTokenToStorage } from "../../utils/refreshToken";
+import { devModeLog } from "dev-mode-log";
 
 const LOGIN_USER = gql`
   mutation ($email: String!, $password: String!) {
@@ -27,11 +28,11 @@ const LOGIN_USER = gql`
 `;
 
 export default function LoginForm() {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("LoginForm component rendered");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("LoginForm component rendered");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,13 +44,13 @@ export default function LoginForm() {
       password,
     },
     onCompleted: async (response) => {
-      console.log("===========================================");
-      console.log("completed the login mutation ");
-      console.log({ loginResponse: response });
+      devModeLog("===========================================");
+      devModeLog("completed the login mutation ");
+      devModeLog({ loginResponse: response });
       if (response.login) {
-        console.log({ loginResponse: response });
+        devModeLog({ loginResponse: response });
         await apolloClient.clearStore();
-        console.log({
+        devModeLog({
           at: response.login.access_token,
           rt: response.login.refresh_token,
         });
@@ -64,7 +65,7 @@ export default function LoginForm() {
       }
     },
     onError: (error) => {
-      console.log({
+      devModeLog({
         msg: "ooops! There was a login error",
         error,
       });
@@ -75,12 +76,12 @@ export default function LoginForm() {
   });
 
   const handleLogin = async () => {
-    console.log("Login button pressed");
+    devModeLog("Login button pressed");
     try {
-      console.log("handleLogin fn");
-      console.log("logging user");
-      console.log("Email:", email);
-      console.log("Password:", password);
+      devModeLog("handleLogin fn");
+      devModeLog("logging user");
+      devModeLog("Email:", email);
+      devModeLog("Password:", password);
 
       await loginUserMutation();
     } catch (error) {

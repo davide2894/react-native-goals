@@ -1,12 +1,13 @@
 import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Modal } from "react-native";
 import { useState } from "react";
+import { devModeLog } from "dev-mode-log";
 
 function NewGoalButton() {
   const [showNewGoalForm, setShowNewGoalForm] = useState(false);
 
   function handlePress(evt) {
-    console.log({ pressEvent: evt });
+    devModeLog({ pressEvent: evt });
     setShowNewGoalForm(true);
   }
 

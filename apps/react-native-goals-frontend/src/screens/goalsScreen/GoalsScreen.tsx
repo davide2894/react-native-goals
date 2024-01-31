@@ -16,53 +16,54 @@ import SignOutButton from "../../components/signOutButton/SignOutButton";
 import { screenCommonStyles } from "../../style/screenCommonStyles";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { gray } from "../../style/colors";
+import { devModeLog } from "dev-mode-log";
 
 function GoalsScreen() {
-  console.log("\n");
-  console.log("\n");
-  console.log("\n");
-  console.log("------------------------------------------------------------");
-  console.log("GoalsScreen component rendered");
-  console.log("GoalsScreen component --> retrieving auth context....");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("\n");
+  devModeLog("------------------------------------------------------------");
+  devModeLog("GoalsScreen component rendered");
+  devModeLog("GoalsScreen component --> retrieving auth context....");
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const auth = useAuthContext();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["25%", "50%"], []);
   const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
+    devModeLog("handleSheetChanges", index);
   }, []);
 
   const { loading, error, data } = useQuery(USER_GOALS_QUERY, {
     onCompleted: async (response) => {
       if (response && response.length) {
-        console.log("goals fetched correctly");
-        console.log("goals response is as follows");
-        console.log({ response: response.userGoals.length });
+        devModeLog("goals fetched correctly");
+        devModeLog("goals response is as follows");
+        devModeLog({ response: response.userGoals.length });
       }
     },
   });
 
-  console.log(
+  devModeLog(
     "GoalsScreen component --> auth context retried in component is the following"
   );
-  console.log({
+  devModeLog({
     token: {
       state: auth.authTokensStateValues,
     },
   });
-  console.log({ data });
+  devModeLog({ data });
 
   if (loading) {
-    console.log("GoalsScreen --> loading goals for current logged user");
+    devModeLog("GoalsScreen --> loading goals for current logged user");
   } else if (error) {
-    console.log("GoalsScreen --> there was an error while fetching goals");
-    console.log({ error });
+    devModeLog("GoalsScreen --> there was an error while fetching goals");
+    devModeLog({ error });
   } else {
-    console.log(
+    devModeLog(
       "GoalsScreen --> finished loading goals for current logged user"
     );
-    console.log({ goals: data?.userGoals });
+    devModeLog({ goals: data?.userGoals });
   }
 
   function handleRenderItem({ item, ..._ }) {
