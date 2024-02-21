@@ -117,4 +117,10 @@ export class GoalsResolver {
       goalTitle,
     );
   }
+
+  @Query(() => String)
+  async hello(): Promise<string> {
+    console.log('in test hello resolver');
+    return 'result';
+  }
 }

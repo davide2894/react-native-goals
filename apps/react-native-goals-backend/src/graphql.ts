@@ -44,6 +44,8 @@ export class Goal {
 
 export abstract class IQuery {
     abstract userGoals(): Nullable<Nullable<Goal>[]> | Promise<Nullable<Nullable<Goal>[]>>;
+
+    abstract hello(): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export abstract class IMutation {

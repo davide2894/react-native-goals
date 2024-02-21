@@ -51,3 +51,7 @@ type Mutation {
   createGoal(goalTitle: String!, maxScore: Int!): Goal
   editGoalTitle(goalId: Int, goalTitle: String): Goal
 }
+
+type Query {
+  hello: String
+}
