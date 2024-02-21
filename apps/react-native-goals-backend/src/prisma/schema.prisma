@@ -1,39 +1,38 @@
-
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  // url      = env("DATABASE_URL")
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  email String @unique
-  password String
-  goals Goal[]
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  goals         Goal[]
   refreshTokens RefreshToken[]
 }
+
 model Goal {
-  id Int @id @default(autoincrement())
-  title String
-  maxScore Int
-  minScore Int
+  id          Int    @id @default(autoincrement())
+  title       String
+  maxScore    Int
+  minScore    Int
   actualScore Int
-  userIdRef Int
-  timestamp Int
-  user User @relation(fields: [userIdRef], references: [id])
+  userIdRef   Int
+  timestamp   Int
+  user        User   @relation(fields: [userIdRef], references: [id])
 }
 
 model RefreshToken {
-  id Int @id @default(autoincrement())
-  token String
-  userIdRef  Int
-  expires DateTime
-  user User @relation(fields: [userIdRef], references: [id])
+  id        Int      @id @default(autoincrement())
+  token     String
+  userIdRef Int
+  expires   DateTime
+  user      User     @relation(fields: [userIdRef], references: [id])
+}
+
+
 }
