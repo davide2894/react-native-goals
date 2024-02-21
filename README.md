@@ -99,4 +99,12 @@ uri: <replace link here>,
 - Open a terminal in the project root folder
 - Run `cd apps/react-native-goals-frontend`
 - Run `npm i`
-- Run `npm run start` (you may need to run expo in tunnel mode in some cases, with the `npm run start --tunnel` command)
+- Run `npm run start` (you may need to run expo in tunnel mode in some cases, with the `npm run start:tunnel` command)
+
+## Features to add
+
+- App tour
+- Automated tests for frontend app
+- Google sign in
+- Publish app on Google Play Store
+- Publish app on Apple App Store
