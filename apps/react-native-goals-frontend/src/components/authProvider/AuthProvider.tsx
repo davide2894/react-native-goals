@@ -52,12 +52,7 @@ function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [
-    authTokenStateValues.access_token,
-    authTokenStateValues.refresh_token,
-    setAuthTokenStateValues,
-    setLoading,
-  ]);
+  }, [authTokenStateValues.access_token, authTokenStateValues.refresh_token]);
 
   function updateAuthTokensInContext(accessTokenNewValue: string) {
     devModeLog("Auth provider: updating access token state");
