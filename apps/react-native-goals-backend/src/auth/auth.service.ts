@@ -5,6 +5,7 @@ import { CreateUserDto } from 'src/users/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { AuthTokensPayload } from 'src/graphql';
+import { devModeLog } from 'dev-mode-log';
 
 @Injectable()
 export class AuthService {
@@ -14,9 +15,9 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    console.log('inside AuthService -> register method');
-    console.log({ createUserDto });
-    console.log({ createUserDtoPassword: createUserDto.password });
+    devModeLog('inside AuthService -> register method');
+    devModeLog({ createUserDto });
+    devModeLog({ createUserDtoPassword: createUserDto.password });
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const newUser = (await this.prismaService.user.create({
@@ -26,22 +27,22 @@ export class AuthService {
       },
     })) as User;
 
-    console.log({ newUser });
+    devModeLog({ newUser });
 
     if (!newUser) {
       throw new Error('Registration failed');
     } else {
-      console.log('creating auth tokens');
+      devModeLog('creating auth tokens');
       const authTokens = await this.createAuthTokens(newUser);
-      console.log({ authTokens });
+      devModeLog({ authTokens });
       return authTokens;
     }
   }
 
   async login(user: User) {
-    console.log('inside auth.serve.ts ->  login method ');
+    devModeLog('inside auth.serve.ts ->  login method ');
     const authTokens = await this.createAuthTokens(user);
-    console.log({ authTokens });
+    devModeLog({ authTokens });
     return authTokens;
   }
 
@@ -86,8 +87,8 @@ export class AuthService {
       },
     });
 
-    console.log('validateUser');
-    console.log({ user });
+    devModeLog('validateUser');
+    devModeLog({ user });
 
     if (!user || !user.email || !user.password) {
       throw new Error('User not found!');
